@@ -1,0 +1,193 @@
+{
+  "provenance": "Artwork supplied by the user for this CarsMotion homepage.",
+  "notice": "These are presentation images, not evidence of vehicle stock or exact specifications. Original filenames are preserved as provenance, not verified model identification.",
+  "processing": "Proportional resizing and WebP export only; no cropping, retouching, compositing or color filters. Logo transparency preserved.",
+  "assets": [
+    {
+      "id": "logo",
+      "originalFilename": "Chrome CarsMotion Sports Car Logo.png",
+      "source": "user supplied",
+      "originalSha256": "0dfac98b59e2839ed12959975bcf808f2c30d46a6428d796a49e0ffab0c50930",
+      "originalWidth": 2172,
+      "originalHeight": 724,
+      "originalMode": "RGBA",
+      "variants": [
+        {
+          "file": "logo.webp",
+          "width": 2172,
+          "height": 724,
+          "bytes": 377426,
+          "sha256": "c3db7cdd78594c43b58e4d30fe9cd49c445f91f42294972e9bcaaff30eb46585"
+        },
+        {
+          "file": "logo.png",
+          "width": 2172,
+          "height": 724,
+          "bytes": 682184,
+          "sha256": "0dfac98b59e2839ed12959975bcf808f2c30d46a6428d796a49e0ffab0c50930",
+          "note": "Unmodified original PNG; preferred compatibility asset for the logo."
+        }
+      ],
+      "alphaRange": [
+        0,
+        255
+      ],
+      "visibleBounds": [
+        39,
+        21,
+        2124,
+        724
+      ]
+    },
+    {
+      "id": "mustang",
+      "originalFilename": "Winter Mustang on Manhattan’s Wet Streets.png",
+      "source": "user supplied",
+      "originalSha256": "81ef319966f9c68ce3b6ffef8405930e10db2cf9059474135c6728a89f7ceb62",
+      "originalWidth": 1916,
+      "originalHeight": 821,
+      "originalMode": "RGB",
+      "variants": [
+        {
+          "file": "mustang-800.webp",
+          "width": 800,
+          "height": 343,
+          "bytes": 82664,
+          "sha256": "112b8a48c3d2c288307249f68eb49d39704afe27f3ae0efe7f040fb60ba1b98b"
+        },
+        {
+          "file": "mustang-1600.webp",
+          "width": 1600,
+          "height": 686,
+          "bytes": 263262,
+          "sha256": "e00f5bf5469f7c6e6e35ae430dc9ab09cbb30dbe15afa9f9fc1b418a2088209b"
+        }
+      ]
+    },
+    {
+      "id": "porsche-alpine",
+      "originalFilename": "Silver Porsche on a Misty Alpine Road.png",
+      "source": "user supplied",
+      "originalSha256": "a6a1261d2805d04c5b1729383da3f3d0949a6ec4b0c9990044136839a645678f",
+      "originalWidth": 1672,
+      "originalHeight": 941,
+      "originalMode": "RGB",
+      "variants": [
+        {
+          "file": "porsche-alpine-800.webp",
+          "width": 800,
+          "height": 450,
+          "bytes": 65836,
+          "sha256": "e462b36b91c75a3132cb2409905e86dff3711e6819625e522c3d5189e4248d9c"
+        },
+        {
+          "file": "porsche-alpine-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "bytes": 182994,
+          "sha256": "c91c6b8a6a914b916b9ce8fa5e314362c1a47fdeffdbb8841f393d191a667caa"
+        }
+      ]
+    },
+    {
+      "id": "lexus",
+      "originalFilename": "Lexus LS 300h Along the Rainy Coast.png",
+      "source": "user supplied",
+      "originalSha256": "5cca7628bcc46c494fb15fc4f3f03ab80c937ef29fee49d952d81caec4b3130c",
+      "originalWidth": 1672,
+      "originalHeight": 941,
+      "originalMode": "RGB",
+      "variants": [
+        {
+          "file": "lexus-800.webp",
+          "width": 800,
+          "height": 450,
+          "bytes": 63144,
+          "sha256": "167c096673ad3b94c1ad43a4467ed110923fbe92d7ef3519543f5b18f52670cd"
+        },
+        {
+          "file": "lexus-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "bytes": 178058,
+          "sha256": "5a7f254a3a3a957ec72c20d817c0bc0eb01f2407423545a756eed8da7f928669"
+        }
+      ]
+    },
+    {
+      "id": "bmw",
+      "originalFilename": "BMW SUV on a Rainy City Road.png",
+      "source": "user supplied",
+      "originalSha256": "6d79c9290f83d51e4b75e07e149bd1f977505d9efb1fed56af6386f51a84f89e",
+      "originalWidth": 1683,
+      "originalHeight": 934,
+      "originalMode": "RGB",
+      "variants": [
+        {
+          "file": "bmw-800.webp",
+          "width": 800,
+          "height": 444,
+          "bytes": 52066,
+          "sha256": "2206eb830ec75b1831fa30fbf8d68f2fd3ee4214b39bde7bc776f3cd474ad4fd"
+        },
+        {
+          "file": "bmw-1600.webp",
+          "width": 1600,
+          "height": 888,
+          "bytes": 137624,
+          "sha256": "969c4de335ce8057fe0f076387f4f3206dc967e27f2cd9cf161d621e7b39cc4f"
+        }
+      ]
+    },
+    {
+      "id": "mercedes",
+      "originalFilename": "Mercedes A200 on a Misty Mountain Road.png",
+      "source": "user supplied",
+      "originalSha256": "d4892a09cf9fc41b4985d84bd9f49992ebc11d1cc1f32bdb4d881cccc16f64bc",
+      "originalWidth": 1916,
+      "originalHeight": 821,
+      "originalMode": "RGB",
+      "variants": [
+        {
+          "file": "mercedes-800.webp",
+          "width": 800,
+          "height": 343,
+          "bytes": 51748,
+          "sha256": "11ccb78da18341153b9c12c35736bf44317fc630f7a207a32b6281822e4f09ef"
+        },
+        {
+          "file": "mercedes-1600.webp",
+          "width": 1600,
+          "height": 686,
+          "bytes": 158408,
+          "sha256": "23fd2a21de6e22153175d15ed49453394c58195a4d734dbe29b963c1fade2b5d"
+        }
+      ]
+    },
+    {
+      "id": "porsche-sunset",
+      "originalFilename": "Sunset Porsche on Mountain Roads.png",
+      "source": "user supplied",
+      "originalSha256": "f2bc741bf9e413f1dec23f99a0aac098cd0817861f8302f3f8b2e7b4d98a09fa",
+      "originalWidth": 1916,
+      "originalHeight": 821,
+      "originalMode": "RGB",
+      "variants": [
+        {
+          "file": "porsche-sunset-800.webp",
+          "width": 800,
+          "height": 343,
+          "bytes": 44974,
+          "sha256": "11c874d96c839690fbdeed972acd4d2a90a321f348a48c700031058861b9b028"
+        },
+        {
+          "file": "porsche-sunset-1600.webp",
+          "width": 1600,
+          "height": 686,
+          "bytes": 126028,
+          "sha256": "f5f9dc2d6d7b094a9da7c5fdfb25d49ae05e85c13639cd9bb9975681a8b36e7a"
+        }
+      ]
+    }
+  ]
+}
