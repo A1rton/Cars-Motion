@@ -8,8 +8,8 @@ import { spawn } from 'node:child_process'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..', 'dist')
 const host = '127.0.0.1'
-const port = 4195
-const url = 'http://127.0.0.1:4195/'
+const port = 4200
+const url = 'http://127.0.0.1:4200/'
 const types = {
   '.html': 'text/html; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
@@ -76,7 +76,7 @@ const server = createServer(async (request, response) => {
 })
 
 server.on('error', error => {
-  if (error.code === 'EADDRINUSE') console.error('El puerto 4195 está ocupado. Cerrá la vista local anterior y abrí CarsMotion nuevamente.')
+  if (error.code === 'EADDRINUSE') console.error('El puerto 4200 está ocupado. Cerrá la vista local anterior y abrí CarsMotion nuevamente.')
   else console.error('No se pudo abrir la vista local. Cerrá otras vistas locales y volvé a intentarlo.')
   process.exitCode = 1
 })
@@ -88,7 +88,7 @@ server.listen(port, host, () => {
   if (process.platform === 'win32' && !process.argv.includes('--no-open')) {
     // The browser command is a literal local URL: no request or user input is
     // interpolated into the Windows command line.
-    const browser = spawn('cmd.exe', ['/d', '/s', '/c', 'start "" "http://127.0.0.1:4195/"'], { windowsHide: true, stdio: 'ignore' })
+    const browser = spawn('cmd.exe', ['/d', '/s', '/c', 'start "" "http://127.0.0.1:4200/"'], { windowsHide: true, stdio: 'ignore' })
     browser.on('error', () => console.log(`Abrí esta dirección en tu navegador: ${url}`))
     browser.unref()
   }

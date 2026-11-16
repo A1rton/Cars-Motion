@@ -7,16 +7,16 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
 
 $projectRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..')).TrimEnd('\', '/')
 $deliveryRoot = [System.IO.Path]::GetFullPath((Join-Path $projectRoot '..'))
-$archivePath = Join-Path $deliveryRoot 'CarsMotion-Inicio.zip'
-$temporaryPath = Join-Path $deliveryRoot ('CarsMotion-Inicio.' + [guid]::NewGuid().ToString('N') + '.tmp.zip')
+$archivePath = Join-Path $deliveryRoot 'CarsMotion-Web.zip'
+$temporaryPath = Join-Path $deliveryRoot ('CarsMotion-Web.' + [guid]::NewGuid().ToString('N') + '.tmp.zip')
 $pathPrefix = $projectRoot + [System.IO.Path]::DirectorySeparatorChar
-$entryPrefix = 'cars-motion-home/'
+$entryPrefix = 'carsmotion-web/'
 
 if (-not (Test-Path -LiteralPath (Join-Path $projectRoot 'dist/index.html') -PathType Leaf)) {
     throw 'Falta dist/index.html. Ejecutá npm run build antes de empaquetar.'
 }
 if ((Test-Path -LiteralPath $archivePath) -and -not $Force) {
-    throw 'CarsMotion-Inicio.zip ya existe. Usá -Force para reemplazar ese archivo de entrega.'
+    throw 'CarsMotion-Web.zip ya existe. Usá -Force para reemplazar ese archivo de entrega.'
 }
 
 function Get-StreamSha256([System.IO.Stream]$Stream) {

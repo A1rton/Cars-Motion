@@ -9,12 +9,12 @@ La página incluye una presentación animada, imágenes superpuestas, una selecc
 ## Ver la página con doble clic
 
 1. Descomprimí el ZIP completo.
-2. Entrá en la carpeta `cars-motion-home`.
+2. Entrá en la carpeta `carsmotion-web`.
 3. Hacé doble clic en **Abrir CarsMotion.cmd**.
 
 Con Node.js 22.12 o posterior instalado, se abre el navegador con la página ya compilada. No hace falta instalar las dependencias para verla. Dejá abierta la ventana que aparece; al cerrarla, termina la vista local. La página queda disponible únicamente en tu computadora.
 
-Si el navegador no se abre automáticamente, usá la dirección `http://127.0.0.1:4195/` que muestra esa ventana. Si aparece un aviso de puerto ocupado, cerrá la vista local anterior y volvé a abrir el archivo.
+Si el navegador no se abre automáticamente, usá la dirección `http://127.0.0.1:4200/` que muestra esa ventana. Si aparece un aviso de puerto ocupado, cerrá la vista local anterior y volvé a abrir el archivo.
 
 ## Editar el proyecto
 
@@ -85,6 +85,6 @@ Después de compilar y finalizar la revisión:
 powershell -ExecutionPolicy Bypass -File .\scripts\package.ps1
 ```
 
-El resultado es `CarsMotion-Inicio.zip`, en la carpeta superior. Incluye el código, los recursos, la compilación, la documentación y un listado de huellas SHA-256. El script comprueba cada archivo dentro del ZIP contra su original. Si ya existe un ZIP y querés reemplazarlo, agregá `-Force`.
+El resultado es `CarsMotion-Web.zip`, en la carpeta superior. Incluye el código, los recursos, la compilación, la documentación y un listado de huellas SHA-256. El script comprueba cada archivo dentro del ZIP contra su original. Si ya existe un ZIP y querés reemplazarlo, agregá `-Force`.
 
 No se incluyen `node_modules`, los archivos temporales de `.work` ni el video de referencia. Los proyectos anteriores permanecen separados.
