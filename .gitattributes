@@ -1,0 +1,8 @@
+# Guardar CRLF en el propio blob: Download ZIP no aplica conversion de checkout.
+*.cmd -text -filter -export-ignore whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/dist -export-ignore
+/dist/** -filter -export-ignore
+/runtime -export-ignore
+/runtime/** -text -diff -merge -filter -export-ignore
+/licencias -export-ignore
+/licencias/** -filter -export-ignore

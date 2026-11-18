@@ -1,5 +1,5 @@
-// Local, dependency-free preview of the delivered build. Run through the
-// Windows launcher or `node scripts/preview.mjs` after `npm run build`.
+// Optional developer preview. End users run Abrir CarsMotion.cmd, which uses
+// the standalone executable in runtime and does not use this Node script.
 import { createServer } from 'node:http'
 import { readFile, realpath, stat } from 'node:fs/promises'
 import { dirname, extname, isAbsolute, relative, resolve } from 'node:path'

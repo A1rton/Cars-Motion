@@ -1,0 +1,73 @@
+name: Download ZIP
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  tracked-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check tracked files, ignore rules, architectures and hashes
+        run: python scripts/check-download.py --git
+      - run: npm ci --no-audit --no-fund
+      - run: npm run build
+      - name: Require the committed dist to match the editable source
+        run: |
+          git diff --exit-code -- dist
+          python scripts/check-download.py --git
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.27.4'
+          cache: false
+      - name: Reproduce all three Windows binaries and licenses
+        run: python scripts/build-runtime.py --check
+  windows-archive:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: windows-latest
+            architecture: native
+            browser: true
+          - runner: windows-latest
+            architecture: x86
+            browser: true
+          - runner: windows-11-arm
+            architecture: native
+            browser: false
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download the actual source ZIP from GitHub for this revision
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARCHIVE_REPOSITORY: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+          ARCHIVE_REF: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          $zip = Join-Path $env:RUNNER_TEMP 'github-source.zip'
+          gh api "repos/$env:ARCHIVE_REPOSITORY/zipball/$env:ARCHIVE_REF" > $zip
+          if ($LASTEXITCODE -ne 0) { throw 'Fallo la descarga del archivo fuente de GitHub.' }
+      - name: Install browser test tools (only on the test machine)
+        if: matrix.browser
+        run: python -m pip install playwright==1.58.0
+      - name: Launch the downloaded CMD with Node and npm absent from its PATH
+        shell: pwsh
+        run: |
+          $argsForTest = @((Join-Path $env:RUNNER_TEMP 'github-source.zip'), '--architecture', '${{ matrix.architecture }}')
+          if ('${{ matrix.browser }}' -ne 'true') { $argsForTest += '--http-only' }
+          python scripts/test-download.py @argsForTest
+          if ($LASTEXITCODE -ne 0) { throw 'Fallo la prueba del ZIP fuente.' }

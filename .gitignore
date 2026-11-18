@@ -1,4 +1,10 @@
 node_modules/
-dist/
 .work/
 *.log
+__pycache__/
+
+# El ZIP de GitHub debe contener la pagina compilada y los servidores.
+!/dist/
+!/dist/**
+!/runtime/
+!/runtime/**

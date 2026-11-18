@@ -33,8 +33,8 @@ goto :error
 
 :missing
 echo Error: faltan archivos de CarsMotion.
-echo Descarga CarsMotion-Web-Windows.zip desde GitHub Releases y selecciona Extraer todo.
-echo https://github.com/A1rton/cars-motion/releases
+echo Descarga el proyecto con Code - Download ZIP y selecciona Extraer todo.
+echo https://github.com/A1rton/cars-motion
 
 :error
 echo.

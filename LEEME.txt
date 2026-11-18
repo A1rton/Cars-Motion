@@ -1,16 +1,17 @@
 CarsMotion para Windows
 =======================
 
-1. En el ZIP, elegi "Extraer todo".
-2. En la carpeta CarsMotion extraida, hace doble clic en "Abrir CarsMotion.cmd".
-3. El sitio se abre en tu navegador predeterminado. Deja abierta la ventana
+1. En https://github.com/A1rton/cars-motion elegi Code - Download ZIP.
+2. En el ZIP descargado, elegi "Extraer todo".
+3. En la carpeta del repositorio extraida, hace doble clic en "Abrir CarsMotion.cmd".
+4. El sitio se abre en tu navegador predeterminado. Deja abierta la ventana
    de CarsMotion mientras uses el sitio. Cerrala para detener el servidor.
 
 Si el navegador no se abre, copia la direccion http://127.0.0.1 que muestra
 la ventana, incluido el puerto, y pegala en el navegador.
 
-Compatible con Windows 10 y 11 en x64, ARM64 y x86 donde el sistema admite
-la arquitectura. Usa un navegador moderno instalado, como Microsoft Edge.
+Compatible con Windows 10/11 x64 y ARM64, y Windows 10 x86 con SSE2.
+Windows 11 no tiene edicion de 32 bits. Usa un navegador moderno instalado, como Microsoft Edge.
 El ZIP incluye el sitio y su servidor local. Funciona sin Internet, sin
 instalar Node.js y sin permisos de administrador.
 
