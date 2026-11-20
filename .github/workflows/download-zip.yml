@@ -20,7 +20,8 @@ jobs:
       - name: Check tracked files, ignore rules, architectures and hashes
         run: python scripts/check-download.py --git
       - run: npm ci --no-audit --no-fund
-      - run: npm run build
+      - name: Rebuild twice and require identical files and hashes
+        run: python scripts/build-download.py --check
       - name: Require the committed dist to match the editable source
         run: |
           git diff --exit-code -- dist

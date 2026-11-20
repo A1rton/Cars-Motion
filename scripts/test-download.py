@@ -144,7 +144,9 @@ def verify_browser(url, executable):
         browser = driver.chromium.launch(
             executable_path=executable,
             channel=None if executable else "msedge",
-            proxy={"server": "http://127.0.0.1:1", "bypass": "127.0.0.1"},
+            # context.route blocks nonlocal requests. The dead proxy also
+            # intercepted loopback in Edge on the Windows CI runners.
+            args=["--no-proxy-server"],
         )
         context = browser.new_context(viewport={"width": 1440, "height": 900},
                                       service_workers="block", reduced_motion="no-preference")

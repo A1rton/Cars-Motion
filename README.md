@@ -42,8 +42,7 @@ npm run dev
 Antes de publicar cambios en el diseño, regenerá y **agregá la compilación al mismo commit**. Python 3 se usa solamente para las verificaciones de mantenimiento:
 
 ```sh
-npm run build
-python scripts/check-download.py --refresh
+python scripts/build-download.py
 git add dist SHA256SUMS.txt
 python scripts/check-download.py --git
 git commit
