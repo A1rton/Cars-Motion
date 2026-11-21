@@ -176,7 +176,8 @@
   position: relative;
   height: 500px;
   margin-right: -10.6%;
-  overflow: clip;
+  overflow-x: clip;
+  overflow-y: visible;
   isolation: isolate;
 }
 .hero-car-scene { position: absolute; inset: 0; visibility: hidden; }

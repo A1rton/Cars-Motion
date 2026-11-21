@@ -63,7 +63,6 @@ function setupMotion() {
       const intro = gsap.timeline({defaults:{ease:'power3.out'}})
       intro.fromTo('.title-line>span',{yPercent:110},{yPercent:0,duration:1.2,stagger:.15},.2)
         .from('.hero-in',{y:22,opacity:0,duration:.9,stagger:.1},.55)
-        .from('.hero-note',{y:25,opacity:0,duration:.7},1.05)
       introPlayed = true
     }
     $$('[data-reveal]').forEach(element => {
@@ -72,7 +71,6 @@ function setupMotion() {
     // The reference's offset floating elements settle as the section arrives.
     gsap.fromTo('.photo-back',{y:90,rotation:-13},{y:-16,rotation:-6,ease:'none',scrollTrigger:{trigger:'.experience',start:'top 92%',end:'bottom 30%',scrub:1}})
     gsap.fromTo('.photo-front',{y:150,rotation:12},{y:-28,rotation:6,ease:'none',scrollTrigger:{trigger:'.experience',start:'top 92%',end:'bottom 30%',scrub:1.2}})
-    gsap.from('.experience-label',{y:30,opacity:0,duration:.8,scrollTrigger:{trigger:'.experience',start:'top 55%',toggleActions:'play none none reverse'}})
     if (!selectionEntered) tileReveal = gsap.from('.vehicle-tile',{y:65,opacity:0,scale:.97,duration:.85,stagger:.11,ease:'power3.out',clearProps:'transform',onComplete:()=>{selectionEntered=true},scrollTrigger:{trigger:'.vehicle-grid',start:'top 88%',once:true}})
     gsap.from('.value-card',{y:i=>70+i*26,opacity:0,duration:.9,stagger:.13,ease:'power3.out',scrollTrigger:{trigger:'.values-grid',start:'top 88%',toggleActions:'play none none reverse'}})
     gsap.from('.closing-panel',{y:55,scale:.96,duration:1,ease:'power3.out',scrollTrigger:{trigger:'.closing',start:'top 88%',toggleActions:'play none none reverse'}})
