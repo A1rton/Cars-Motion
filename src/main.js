@@ -3,6 +3,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { Flip } from 'gsap/Flip'
 import './style.css'
+import { createHeroCar } from './hero-car.js'
 
 gsap.registerPlugin(ScrollTrigger, Flip)
 
@@ -37,6 +38,7 @@ let selectionEntered = false
 let introPlayed = false
 const reduced = () => media.matches || motionPaused
 const toggle = $('#motion-toggle')
+const heroCar = createHeroCar({ gsap, reduced, signal: events.signal })
 
 function setupMotion() {
   if (disposed) return
@@ -45,6 +47,7 @@ function setupMotion() {
   animations?.revert()
   animations = null
   tileReveal = null
+  heroCar.refreshMotion()
   document.documentElement.classList.toggle('motion-paused', reduced())
   toggle.setAttribute('aria-pressed', String(reduced()))
   // A system preference is not an enabled action. Keep its label and disabled
@@ -56,16 +59,13 @@ function setupMotion() {
     : `${motionPaused ? 'Activar animaciones' : 'Pausar animaciones'} <span aria-hidden="true">${motionPaused ? '▷' : 'Ⅱ'}</span>`
   if (reduced()) return
   animations = gsap.context(() => {
-    if (!introPlayed && scrollY < 150) {
+    if (!introPlayed && !document.hidden && $('.hero').getBoundingClientRect().bottom > 0) {
       const intro = gsap.timeline({defaults:{ease:'power3.out'}})
-      intro.from('.title-line>span',{yPercent:110,duration:1,stagger:.11},.1)
-        .from('.hero-in',{y:22,opacity:0,duration:.8,stagger:.1},.48)
-        .from('.hero-image-frame',{clipPath:'inset(0 0 100% 0 round 22px)',y:25,duration:1.25},.15)
-        .from('.hero-image-frame>img',{scale:1.1,duration:1.65},.15)
-        .from('.hero-note',{y:25,opacity:0,duration:.7},.95)
+      intro.fromTo('.title-line>span',{yPercent:110},{yPercent:0,duration:1.2,stagger:.15},.2)
+        .from('.hero-in',{y:22,opacity:0,duration:.9,stagger:.1},.55)
+        .from('.hero-note',{y:25,opacity:0,duration:.7},1.05)
       introPlayed = true
     }
-    gsap.to('.hero-image-frame>img',{yPercent:7,ease:'none',scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:1}})
     $$('[data-reveal]').forEach(element => {
       gsap.from(element,{y:34,opacity:0,duration:.85,ease:'power3.out',scrollTrigger:{trigger:element,start:'top 91%',toggleActions:'play none none reverse'}})
     })
@@ -87,6 +87,7 @@ on(toggle,'click',()=>{
   setupMotion()
 })
 on(media,'change',setupMotion)
+on(document,'visibilitychange',()=>{if(!document.hidden && !introPlayed)setupMotion()})
 setupMotion()
 const refreshLayout = () => { if (!disposed) ScrollTrigger.refresh() }
 document.fonts.ready.then(refreshLayout)
@@ -248,6 +249,7 @@ $('#year').textContent=String(new Date().getFullYear())
 
 if(import.meta.hot)import.meta.hot.dispose(()=>{
   disposed=true
+  heroCar.dispose()
   setMenu(false,false)
   $$('dialog[open]').forEach(closeDialog)
   events.abort()

@@ -152,6 +152,9 @@ def verify_browser(url, executable):
                                       service_workers="block", reduced_motion="no-preference")
 
         verify_browser_context(context, url)
+        context.close()
+        hero_checks = runpy.run_path(str(Path(__file__).with_name('test-hero.py')))
+        hero_checks['verify_hero'](browser, url)
         browser.close()
 
 def main():

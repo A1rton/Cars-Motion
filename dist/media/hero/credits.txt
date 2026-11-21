@@ -1,0 +1,21 @@
+CarsMotion — Porsche 911 cinematic hero
+
+Fotografía original: Porsche 992 GT3 Touring parked in San Jose dllu.jpg
+Autor: Dllu
+Fuente: https://commons.wikimedia.org/wiki/File:Porsche_992_GT3_Touring_parked_in_San_Jose_dllu.jpg
+Licencia original: Creative Commons Attribution-ShareAlike 4.0 International
+Licencia: https://creativecommons.org/licenses/by-sa/4.0/
+
+Adaptaciones para CarsMotion:
+- Eliminación del fondo asistida por una herramienta generativa.
+- Extracción y reconstrucción asistida de la rueda como capa para animación.
+- Exportación y optimización de las imágenes en formato WebP.
+- Composición, encuadre y animación mediante HTML, CSS y JavaScript.
+
+Los recursos de imagen adaptados porsche-911.webp, porsche-911-960.webp y
+porsche-wheel.webp se distribuyen bajo la misma licencia CC BY-SA 4.0.
+La adaptación asistida puede modificar detalles respecto de la fotografía
+original. No se presenta como una fotografía original sin modificaciones.
+
+Esta atribución y licencia corresponden a los recursos de imagen citados.
+No implican afiliación ni respaldo del autor o del fabricante a CarsMotion.

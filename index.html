@@ -7,7 +7,8 @@
     <meta name="description" content="CarsMotion. Un universo de automóviles premium. Diseño, carácter y nuevas formas de disfrutar el camino."/>
     <title>CarsMotion — Elegí tu próximo camino</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml"/>
-    <link rel="preload" as="image" href="/media/porsche-sunset-1600.webp" fetchpriority="high"/>
+    <noscript><style>.hero-fallback { visibility: visible !important; }</style></noscript>
+    <link rel="preload" as="image" href="/media/hero/porsche-911.webp" imagesrcset="/media/hero/porsche-911-960.webp 960w, /media/hero/porsche-911.webp 1935w" imagesizes="(max-width: 600px) 160vw, (max-width: 900px) 145vw, 105vw" fetchpriority="high"/>
   </head>
   <body>
     <svg class="icon-definitions" aria-hidden="true" width="0" height="0">
@@ -60,7 +61,21 @@
             <a href="#experiencia" class="scroll-link hero-in"><span class="scroll-icon" aria-hidden="true">↓</span> Un nuevo punto de partida</a>
           </div>
           <div class="hero-visual">
-            <div class="hero-image-frame"><img src="/media/porsche-sunset-1600.webp" srcset="/media/porsche-sunset-800.webp 800w, /media/porsche-sunset-1600.webp 1600w" sizes="(max-width: 760px) 100vw, 62vw" width="1916" height="821" alt="Porsche al atardecer en una ruta de montaña" fetchpriority="high"/><div class="hero-image-shade"></div><div class="hero-image-caption"><span>El camino es tuyo.</span><span class="image-index">01 / 06</span></div></div>
+            <div class="hero-car-stage">
+              <div class="hero-fallback hero-image-frame">
+                <img src="/media/porsche-sunset-1600.webp" width="1916" height="821" alt="Porsche al atardecer en una ruta de montaña"/>
+                <div class="hero-image-shade"></div>
+                <div class="hero-image-caption"><span>El camino es tuyo.</span></div>
+              </div>
+              <div class="hero-car-scene">
+                <div class="hero-car">
+                  <img class="hero-car-image" src="/media/hero/porsche-911.webp" srcset="/media/hero/porsche-911-960.webp 960w, /media/hero/porsche-911.webp 1935w" sizes="(max-width: 600px) 160vw, (max-width: 900px) 145vw, 105vw" width="1935" height="813" alt="Porsche 911 GT3 Touring blanco, detalle lateral" fetchpriority="high"/>
+                  <span class="hero-wheel hero-wheel-front" aria-hidden="true"><span class="hero-wheel-brake"></span><img class="hero-wheel-rotor" src="/media/hero/porsche-wheel.webp" width="640" height="640" alt=""/></span>
+                  <span class="hero-wheel hero-wheel-rear" aria-hidden="true"><span class="hero-wheel-brake"></span><img class="hero-wheel-rotor" src="/media/hero/porsche-wheel.webp" width="640" height="640" alt=""/></span>
+                </div>
+                <a class="hero-photo-credit" href="%BASE_URL%media/hero/credits.txt" target="_blank" rel="noopener" aria-label="Créditos y licencia de la fotografía del Porsche">Fotografía: Dllu ↗</a>
+              </div>
+            </div>
             <div class="hero-note"><span class="small-star" aria-hidden="true">✦</span><span>La diferencia está<br/>en lo que te hace sentir.</span><a href="#experiencia" aria-label="Descubrir la experiencia CarsMotion">↘</a></div>
           </div>
         </section>
