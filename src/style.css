@@ -16,23 +16,55 @@
 
 .brand-strip {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  align-items: center;
   gap: 8px;
   margin-inline: 5.2%;
   padding-block: 12px;
   border-block: 1px solid var(--line);
 }
 
+.brand-track {
+  --visible-brands: 5;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc(100% / var(--visible-brands));
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.brand-track::-webkit-scrollbar { display: none; }
+.brand-arrow {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: transparent;
+  color: var(--ink);
+  border: 0;
+  border-radius: 50%;
+  transition: opacity .2s ease;
+}
+.brand-arrow svg { width: 23px; fill: none; stroke: currentColor; stroke-width: 1.35; transition: transform .2s ease; }
+.brand-next:hover svg { transform: translateX(3px); }
+.brand-prev:hover svg { transform: translateX(-3px); }
+.brand-arrow[aria-disabled="true"] { pointer-events: none; }
+.brand-arrow[aria-disabled="true"]:not(:focus-visible) { opacity: 0; }
+
 .brand-button {
   display: grid;
   place-items: center;
   justify-self: center;
-  width: min(100%, 104px);
+  width: 100%;
   min-height: 96px;
   padding: 8px 4px;
   border: 0;
   border-radius: 0;
   background: transparent;
+  scroll-snap-align: start;
 }
 
 .brand-button img {
@@ -47,6 +79,7 @@
 }
 
 .brand-lexus img { height: 47px; }
+.brand-wide img { width: 90px; max-width: 94%; height: auto; }
 .brand-button:focus-visible { outline: none; }
 .brand-button:focus-visible img {
   transform: perspective(400px) scale(1.14);
@@ -68,11 +101,20 @@
   .brand-strip { margin-inline: 22px; }
 }
 
+@media (max-width: 700px) {
+  .brand-track { --visible-brands: 3; }
+}
+
 @media (max-width: 600px) {
   .brand-strip { gap: 4px; padding-block: 8px; }
   .brand-button { min-height: 68px; }
   .brand-button img { height: 43px; }
   .brand-lexus img { height: 32px; }
+  .brand-wide img { width: 66px; height: auto; }
+}
+
+@media (max-width: 374px) {
+  .brand-track { --visible-brands: 2; }
 }
 
 @media (prefers-reduced-motion: reduce) {

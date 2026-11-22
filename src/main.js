@@ -22,6 +22,10 @@ const brandPages = {
   'mercedes-benz': { name: 'Mercedes-Benz', href: null },
   'alfa-romeo': { name: 'Alfa Romeo', href: null },
   bmw: { name: 'BMW', href: null },
+  volvo: { name: 'Volvo', href: null },
+  ds: { name: 'DS Automobiles', href: null },
+  audi: { name: 'Audi', href: null },
+  jeep: { name: 'Jeep', href: null },
 }
 
 const $ = selector => document.querySelector(selector)
@@ -171,8 +175,48 @@ $$('dialog').forEach(dialog=>{
 })
 const futureDialog=$('.future-dialog')
 
+const brandTrack = $('#brand-track')
+const brandButtons = $$('.brand-button')
+const previousBrands = $('.brand-prev')
+const nextBrands = $('.brand-next')
+
+function updateBrandArrows() {
+  const lastPosition = brandTrack.scrollWidth - brandTrack.clientWidth
+  for (const [button, available] of [
+    [previousBrands, brandTrack.scrollLeft > 1],
+    [nextBrands, brandTrack.scrollLeft < lastPosition - 1],
+  ]) {
+    button.setAttribute('aria-disabled', String(!available))
+    button.tabIndex = available ? 0 : -1
+  }
+}
+
+function advanceBrands(direction) {
+  brandTrack.scrollBy({
+    left: direction * brandTrack.clientWidth,
+    behavior: reduced() ? 'instant' : 'smooth',
+  })
+}
+
+on(previousBrands, 'click', () => advanceBrands(-1))
+on(nextBrands, 'click', () => advanceBrands(1))
+on(brandTrack, 'scroll', updateBrandArrows, { passive: true })
+on(window, 'resize', updateBrandArrows)
+updateBrandArrows()
+
+on(brandTrack, 'keydown', event => {
+  const index = brandButtons.indexOf(event.target)
+  if (index === -1) return
+  const destinations = { ArrowLeft: index - 1, ArrowRight: index + 1, Home: 0, End: brandButtons.length - 1 }
+  if (!Object.hasOwn(destinations, event.key)) return
+  event.preventDefault()
+  const target = brandButtons[Math.max(0, Math.min(brandButtons.length - 1, destinations[event.key]))]
+  target.focus({ preventScroll: true })
+  target.scrollIntoView({ behavior: reduced() ? 'instant' : 'smooth', block: 'nearest', inline: 'nearest' })
+})
+
 // Keep the hit target still while the emblem follows the pointer's angle.
-$$('.brand-button').forEach(button => {
+brandButtons.forEach(button => {
   on(button, 'pointermove', event => {
     if (event.pointerType !== 'mouse' || reduced()) return
     const bounds = button.getBoundingClientRect()

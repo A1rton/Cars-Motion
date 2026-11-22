@@ -59,6 +59,35 @@ def verify_http(url, manifest):
         with_connection.close()
 
 
+def verify_brand_navigation(page):
+    from playwright.sync_api import expect
+
+    previous = page.locator(".brand-prev")
+    following = page.locator(".brand-next")
+    track = page.locator("#brand-track")
+    at_start = "track => track.scrollLeft < 2"
+    at_end = "track => track.scrollWidth - track.clientWidth - track.scrollLeft < 2"
+    expect(previous).to_have_attribute("aria-disabled", "true")
+    assert track.evaluate(at_start)
+    # Walk both directions. Narrow screens need more than one press per trip.
+    for button, boundary in ((following, at_end), (previous, at_start)):
+        for _ in range(9):
+            if button.get_attribute("aria-disabled") == "true":
+                break
+            before = track.evaluate("track => track.scrollLeft")
+            track.evaluate("""track => {
+                window.brandScrollFinished = false;
+                track.addEventListener('scrollend', () => { window.brandScrollFinished = true },
+                                       {once: true});
+            }""")
+            button.click()
+            page.wait_for_function("window.brandScrollFinished")
+            after = track.evaluate("track => track.scrollLeft")
+            assert after > before if button is following else after < before
+        expect(button).to_have_attribute("aria-disabled", "true")
+        page.wait_for_function(f"({boundary})(document.querySelector('#brand-track'))")
+
+
 def verify_browser_context(context, url):
     from playwright.sync_api import expect
     failures = []
@@ -86,10 +115,12 @@ def verify_browser_context(context, url):
         .filter(img => img.hasAttribute('src'))
         .every(img => img.complete && img.naturalWidth > 0)""")
 
-    logo_buttons = page.locator(".brand-button")
-    expect(logo_buttons).to_have_count(5)
-    for index, brand in enumerate(("Porsche", "Lexus", "Mercedes-Benz", "Alfa Romeo", "BMW")):
-        logo_buttons.nth(index).click()
+    brands = ("Porsche", "Lexus", "Mercedes-Benz", "Alfa Romeo", "BMW",
+              "Volvo", "DS Automobiles", "Audi", "Jeep")
+    expect(page.locator(".brand-button")).to_have_count(len(brands))
+    verify_brand_navigation(page)
+    for brand in brands:
+        page.get_by_role("button", name=f"Ver autos {brand}", exact=True).click()
         expect(page.locator("#future-title")).to_have_text(f"Autos {brand}")
         page.keyboard.press("Escape")
     page.locator(".navigation .login-button").click()
@@ -127,6 +158,7 @@ def verify_browser_context(context, url):
 
     page.set_viewport_size({"width": 390, "height": 844})
     page.goto(url)
+    verify_brand_navigation(page)
     menu = page.locator(".menu-toggle")
     menu.click()
     expect(menu).to_have_attribute("aria-expanded", "true")

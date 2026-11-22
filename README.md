@@ -26,7 +26,7 @@ El lanzador elige la arquitectura automáticamente, incluso desde un proceso de 
 
 ### Qué incluye la página
 
-Se conserva el diseño actual: animaciones, menú adaptable, cinco emblemas de marcas, filtros, ampliación de fotografías y pausa del movimiento. Imágenes, fuentes y JavaScript están incluidos localmente.
+La franja de marcas permite recorrer nueve emblemas con las flechas laterales o deslizando en una pantalla táctil. Cada emblema abre el aviso de su marca. El inicio también incluye un menú adaptable, filtros, ampliación de fotografías y un control para pausar las animaciones. Imágenes, fuentes y JavaScript están incluidos localmente.
 
 **Está desarrollado el inicio.** Autos, Nosotros, Contacto, las marcas e Iniciar sesión muestran los avisos de próxima disponibilidad que ya tenía el proyecto. No hay cuentas reales, inventario comercial, reservas ni envío de consultas.
 
