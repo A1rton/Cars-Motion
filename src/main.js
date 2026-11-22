@@ -13,7 +13,6 @@ const pages = {
   nosotros: { title:'Nuestra historia, muy pronto.', description:'Estamos preparando un espacio para que conozcas más de CarsMotion y de nuestra pasión por los automóviles.', href:null },
   autos: { title:'Tu próximo auto está por llegar.', description:'Estamos preparando nuestra colección. Mientras tanto, recorré las imágenes y descubrí el universo CarsMotion.', href:null },
   contacto: { title:'Pronto vamos a estar más cerca.', description:'Nuestro espacio de contacto está en camino. Muy pronto vas a poder conversar con CarsMotion.', href:null },
-  login: { title: 'Iniciar sesión', description: 'El acceso a tu cuenta estará disponible próximamente.', href: null },
 }
 
 const brandPages = {

@@ -123,11 +123,7 @@ def verify_browser_context(context, url):
         page.get_by_role("button", name=f"Ver autos {brand}", exact=True).click()
         expect(page.locator("#future-title")).to_have_text(f"Autos {brand}")
         page.keyboard.press("Escape")
-    page.locator(".navigation .login-button").click()
-    expect(page.locator(".future-dialog")).to_be_visible()
-    expect(page.locator("#future-title")).to_have_text("Iniciar sesión")
-    expect(page.locator("#future-description")).to_contain_text("próximamente")
-    page.keyboard.press("Escape")
+    expect(page.locator('[data-page="login"]')).to_have_count(0)
 
     for key, count in (("all", 6), ("sedan", 1), ("compact", 1), ("suv", 1), ("sport", 3)):
         page.locator(f'.filter[data-filter="{key}"]').click()
@@ -162,9 +158,9 @@ def verify_browser_context(context, url):
     menu = page.locator(".menu-toggle")
     menu.click()
     expect(menu).to_have_attribute("aria-expanded", "true")
-    page.locator(".mobile-navigation .login-button").click()
+    page.locator(".mobile-navigation [data-page='contacto']").click()
     expect(menu).to_have_attribute("aria-expanded", "false")
-    expect(page.locator("#future-title")).to_have_text("Iniciar sesión")
+    expect(page.locator("#future-title")).to_have_text("Pronto vamos a estar más cerca.")
     page.keyboard.press("Escape")
     expect(page.locator(".future-dialog")).to_be_hidden()
     assert not failures, failures

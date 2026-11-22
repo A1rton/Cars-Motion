@@ -123,95 +123,22 @@
 
 .motion-paused .brand-strip .brand-button img { transform: none; }
 
-.icon-definitions {
-  position: absolute;
-  width: 0;
-  height: 0;
-  pointer-events: none;
-}
-
-.navigation > .login-button,
-.mobile-navigation > .login-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-  min-height: 44px;
-  padding: 0 15px 0 12px;
-  border: 1px solid #d5d8d7;
-  border-radius: 999px;
-  color: var(--ink);
-  background: var(--paper);
-  font-size: 13px;
-  font-weight: 560;
-  letter-spacing: -.015em;
-  white-space: nowrap;
-  touch-action: manipulation;
-}
-
-.navigation > .login-button { margin-inline-start: -14px; }
-
-.login-button svg {
-  flex: none;
-  width: 19px;
-  height: 19px;
-  stroke-width: 1.65;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.login-trace {
-  visibility: hidden;
-  stroke: #111817;
-}
-
-@keyframes login-profile-trace {
-  from { stroke-dashoffset: 1; }
-  to { stroke-dashoffset: 0; }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  html:not(.motion-paused) .login-button:is(:focus-visible, :active) .login-profile {
-    opacity: .42;
-  }
-
-  html:not(.motion-paused) .login-button:is(:focus-visible, :active) .login-trace {
-    visibility: visible;
-  }
-
-  html:not(.motion-paused) .login-button:is(:focus-visible, :active) .login-trace use {
-    stroke-dasharray: 1 1;
-    animation: login-profile-trace 300ms cubic-bezier(.25, .65, .26, 1) both;
-  }
-
-  html:not(.motion-paused) .login-button:is(:focus-visible, :active) .login-trace use + use {
-    animation-delay: 95ms;
-  }
-
-  @media (hover: hover) {
-    html:not(.motion-paused) .login-button:hover .login-profile { opacity: .42; }
-    html:not(.motion-paused) .login-button:hover .login-trace { visibility: visible; }
-    html:not(.motion-paused) .login-button:hover .login-trace use {
-      stroke-dasharray: 1 1;
-      animation: login-profile-trace 300ms cubic-bezier(.25, .65, .26, 1) both;
-    }
-    html:not(.motion-paused) .login-button:hover .login-trace use + use { animation-delay: 95ms; }
-  }
-}
-
-@media (max-width: 1000px) {
-  .navigation > .login-button { margin-inline-start: -8px; }
-}
-
 @media (max-width: 900px) {
   .mobile-navigation { overflow-y: auto; }
-  .mobile-navigation > .login-button {
-    align-self: flex-start;
-    flex-shrink: 0;
-    min-height: 46px;
-    margin-block: 22px 14px;
-  }
 }
+
+.hero-copy .hero-description,
+.experience-copy p:not(.eyebrow),
+.section-heading p:not(.eyebrow) {
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(16px, 1.15vw, 18px);
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: normal;
+  color: #414745;
+}
+
+.experience-copy .eyebrow, .values-heading .eyebrow { color: #686e6b; }
 
 /* Oversized side profile, cropped by the page edge as in the reference. */
 .hero-car-stage {
