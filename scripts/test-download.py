@@ -128,7 +128,7 @@ def verify_browser_context(context, url):
     for key, count in (("all", 6), ("sedan", 1), ("compact", 1), ("suv", 1), ("sport", 3)):
         page.locator(f'.filter[data-filter="{key}"]').click()
         expect(page.locator('.vehicle-tile:visible')).to_have_count(count)
-    for key in ("nosotros", "autos", "contacto"):
+    for key in ("nosotros", "autos", "financiacion", "contacto"):
         page.locator(f'.navigation [data-page="{key}"]').click()
         expect(page.locator('.future-dialog')).to_be_visible()
         page.keyboard.press("Escape")
@@ -163,6 +163,12 @@ def verify_browser_context(context, url):
     expect(page.locator("#future-title")).to_have_text("Pronto vamos a estar más cerca.")
     page.keyboard.press("Escape")
     expect(page.locator(".future-dialog")).to_be_hidden()
+    for entrance in (".mobile-navigation", "footer"):
+        if entrance == ".mobile-navigation":
+            menu.click()
+        page.locator(f"{entrance} [data-page='financiacion']").click()
+        expect(page.locator("#future-title")).to_have_text("Financiación")
+        page.keyboard.press("Escape")
     assert not failures, failures
 
 
