@@ -3,14 +3,11 @@
 ## Abrir en Windows
 
 1. Entrá a [este repositorio](https://github.com/A1rton/cars-motion) y elegí **Code → Download ZIP**.
-2. En el archivo descargado, elegí **Extraer todo**.
-3. Abrí la carpeta extraída y hacé doble clic en **Abrir CarsMotion.cmd**.
+2. Abrí el ZIP, entrá en la carpeta del proyecto y hacé doble clic en **Abrir CarsMotion.cmd**.
 
-La página se abre en tu navegador predeterminado. **No necesitás instalar Node.js, npm ni Go, compilar nada o tener Internet después de descargar el ZIP.** Dejá abierta la ventana de CarsMotion mientras lo uses; cerrala para detener el servidor.
+El lanzador abre el sitio en el navegador predeterminado. Si Windows abre el CMD por separado, usa la copia del sitio que lleva incorporada. Funciona sin conexión y sin instalar Node.js.
 
-Si el navegador no se abre, copiá la dirección `http://127.0.0.1:PUERTO/` que aparece en esa ventana. El puerto se elige automáticamente. No abras `dist/index.html` directamente ni ejecutes el lanzador desde dentro del ZIP.
-
-Conservá juntos `Abrir CarsMotion.cmd`, `dist/` y `runtime/`. Si faltan archivos, volvé a descargar con **Code → Download ZIP** y extraé todo.
+Si elegís **Extraer todo**, el mismo CMD usa el servidor incluido. En ese caso, dejá su ventana abierta mientras uses la página. También podés copiar la dirección local que aparece en la ventana.
 
 ### Compatibilidad
 
@@ -43,7 +40,7 @@ Antes de publicar cambios en el diseño, regenerá y **agregá la compilación a
 
 ```sh
 python scripts/build-download.py
-git add dist SHA256SUMS.txt
+git add dist "Abrir CarsMotion.cmd" SHA256SUMS.txt
 python scripts/check-download.py --git
 git commit
 git push

@@ -92,7 +92,7 @@ def verify_browser_context(context, url):
     from playwright.sync_api import expect
     failures = []
     def local_requests_only(route):
-        if route.request.url.startswith(url):
+        if route.request.url.startswith(url.rsplit('/', 1)[0] + '/'):
             route.continue_()
         else:
             failures.append(f"Recurso externo: {route.request.url}")
@@ -188,7 +188,8 @@ def verify_browser(url, executable):
         verify_browser_context(context, url)
         context.close()
         hero_checks = runpy.run_path(str(Path(__file__).with_name('test-hero.py')))
-        hero_checks['verify_hero'](browser, url)
+        if url.startswith('http:'):
+            hero_checks['verify_hero'](browser, url)
         browser.close()
 
 def main():
@@ -227,23 +228,20 @@ def main():
             for name in ('node.exe', 'npm.cmd'):
                 assert subprocess.run([str(cmd.parent / 'where.exe'), name], env=env,
                                       cwd=outside, capture_output=True).returncode != 0
-            # Missing extraction must give a useful Code > Download ZIP error.
+            # Reproduce Explorer handing the visitor only the CMD, with no ZIP
+            # alongside it, no Node on PATH, no standard input and a fresh cache.
             missing = outside / 'Abrir CarsMotion.cmd'
             missing.write_bytes((package / missing.name).read_bytes())
-            result = subprocess.run(f'"{cmd}" /d /s /c ""{missing}""', cwd=outside, env=env,
-                                    stdin=subprocess.DEVNULL, capture_output=True, timeout=15)
-            assert result.returncode == 1 and b'Code - Download ZIP' in result.stdout
-            # Explorer can extract just the launcher. Recover from the selected ZIP
-            # even when its directory contains spaces, shell punctuation and accents.
-            import shutil
-            recovery_zip = outside / 'Cars Motion & prueba.zip'
-            shutil.copyfile(args.zip, recovery_zip)
-            recovered = subprocess.run(f'"{cmd}" /d /s /c ""{missing}""', cwd=outside, env=env,
-                                       input=b'"Cars Motion & prueba.zip"\r\n', capture_output=True, timeout=90)
-            assert recovered.returncode == 0, (recovered.stdout, recovered.stderr)
-            [recovered_launcher] = outside.glob('CarsMotion extraido */*/Abrir CarsMotion.cmd')
-            verifier['verify'](recovered_launcher.parent)
-            command = f'"{cmd}" /d /s /v:off /c ""{recovered_launcher}""'
+            cache = outside / 'temp'
+            cache.mkdir()
+            result = subprocess.run(f'"{cmd}" /d /s /c ""{missing}" --prepare-only"',
+                                    cwd=outside, env=env | {'TEMP': str(cache), 'TMP': str(cache)},
+                                    stdin=subprocess.DEVNULL, capture_output=True, timeout=60)
+            assert result.returncode == 0, (result.stdout, result.stderr)
+            [offline] = cache.glob('CarsMotion-*/index.html')
+            assert (offline.parent / 'media/hero/porsche-911.webp').is_file()
+            if not args.http_only:
+                verify_browser(offline.as_uri(), args.browser)
         else:
             import shutil
             if not args.local_server or not args.http_only:

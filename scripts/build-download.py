@@ -6,6 +6,8 @@ from pathlib import Path
 import subprocess
 import sys
 
+from offline_launcher import launcher
+
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -36,6 +38,13 @@ def main():
         build()
         if snapshot() != first:
             raise RuntimeError('La segunda compilacion no reproduce la primera')
+    cmd = ROOT / 'Abrir CarsMotion.cmd'
+    generated = launcher(ROOT)
+    if args.check:
+        if generated != cmd.read_bytes():
+            raise RuntimeError('La copia autonoma del lanzador no coincide con dist')
+    else:
+        cmd.write_bytes(generated)
     command = [sys.executable, 'scripts/check-download.py']
     if not args.check:
         command.append('--refresh')

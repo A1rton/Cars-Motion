@@ -1,0 +1,34 @@
+@echo off
+setlocal EnableExtensions DisableDelayedExpansion
+title CarsMotion - Vista local
+if not exist "%~dp0dist\index.html" goto :offline
+set "arch=%PROCESSOR_ARCHITECTURE%"
+if defined PROCESSOR_ARCHITEW6432 set "arch=%PROCESSOR_ARCHITEW6432%"
+if /i "%arch%"=="AMD64" set "arch=x64"
+if /i "%arch%"=="ARM64" set "arch=arm64"
+if /i "%arch%"=="x86" set "arch=x86"
+if not exist "%~dp0runtime\CarsMotion-%arch%.exe" goto :offline
+"%~dp0runtime\CarsMotion-%arch%.exe"
+exit /b %errorlevel%
+
+:offline
+set "CARSMOTION_LAUNCHER=%~f0"
+set "CARSMOTION_PREVIEW_ONLY="
+if "%~1"=="--prepare-only" set "CARSMOTION_PREVIEW_ONLY=1"
+echo Abriendo CarsMotion...
+"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -Command ^
+  "$ErrorActionPreference='Stop'; try {" ^
+  "$dir=Join-Path ([IO.Path]::GetTempPath()) 'CarsMotion-@DIGEST@'; $html=Join-Path $dir 'index.html';" ^
+  "if (![IO.File]::Exists($html)) {" ^
+  "$self=[IO.File]::ReadAllText($env:CARSMOTION_LAUNCHER); $mark=':CARSMOTION_WEB'; $bytes=[Convert]::FromBase64String($self.Substring($self.LastIndexOf($mark)+$mark.Length));" ^
+  "$hash=[BitConverter]::ToString([Security.Cryptography.SHA256]::Create().ComputeHash($bytes)).Replace('-',''); if ($hash -ne '@DIGEST@') {throw 'La descarga esta incompleta.'};" ^
+  "Add-Type -AssemblyName System.IO.Compression,System.IO.Compression.FileSystem; $stage=$dir+'-'+[Guid]::NewGuid().ToString('N'); $stream=[IO.MemoryStream]::new($bytes); $zip=[IO.Compression.ZipArchive]::new($stream);" ^
+  "try {[IO.Compression.ZipFileExtensions]::ExtractToDirectory($zip,$stage)} finally {$zip.Dispose(); $stream.Dispose()};" ^
+  "try {[IO.Directory]::Move($stage,$dir)} catch [IO.IOException] {if (![IO.File]::Exists($html)) {throw}; [IO.Directory]::Delete($stage,$true)} };" ^
+  "if ($env:CARSMOTION_PREVIEW_ONLY) {[Console]::OutputEncoding=[Text.UTF8Encoding]::new($false); Write-Output $html} else {Start-Process -FilePath $html}; exit 0" ^
+  "} catch {Write-Host $_.Exception.Message; exit 1}"
+if not errorlevel 1 exit /b 0
+pause
+exit /b 1
+
+:CARSMOTION_WEB
