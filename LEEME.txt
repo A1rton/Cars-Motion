@@ -15,7 +15,8 @@ Windows 11 no tiene edicion de 32 bits. Usa un navegador moderno instalado, como
 El ZIP incluye el sitio y su servidor local. Funciona sin Internet, sin
 instalar Node.js y sin permisos de administrador.
 
-Si faltan archivos, volve a extraer todo el ZIP y conserva juntas las
-carpetas dist y runtime y el archivo Abrir CarsMotion.cmd.
+Si abriste el lanzador dentro del ZIP, arrastra el ZIP descargado a la ventana
+que pide su ruta y pulsa Enter. Se extrae una copia nueva junto al ZIP.
+Abri Abrir CarsMotion.cmd desde la carpeta extraida que muestra el Explorador.
 
 Los avisos de terceros estan en la carpeta licencias.

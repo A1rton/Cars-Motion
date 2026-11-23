@@ -233,6 +233,17 @@ def main():
             result = subprocess.run(f'"{cmd}" /d /s /c ""{missing}""', cwd=outside, env=env,
                                     stdin=subprocess.DEVNULL, capture_output=True, timeout=15)
             assert result.returncode == 1 and b'Code - Download ZIP' in result.stdout
+            # Explorer can extract just the launcher. Recover from the selected ZIP
+            # even when its directory contains spaces, shell punctuation and accents.
+            import shutil
+            recovery_zip = outside / 'Cars Motion & prueba.zip'
+            shutil.copyfile(args.zip, recovery_zip)
+            recovered = subprocess.run(f'"{cmd}" /d /s /c ""{missing}""', cwd=outside, env=env,
+                                       input=b'"Cars Motion & prueba.zip"\r\n', capture_output=True, timeout=90)
+            assert recovered.returncode == 0, (recovered.stdout, recovered.stderr)
+            [recovered_launcher] = outside.glob('CarsMotion extraido */*/Abrir CarsMotion.cmd')
+            verifier['verify'](recovered_launcher.parent)
+            command = f'"{cmd}" /d /s /v:off /c ""{recovered_launcher}""'
         else:
             import shutil
             if not args.local_server or not args.http_only:
