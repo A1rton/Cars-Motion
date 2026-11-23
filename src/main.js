@@ -3,9 +3,11 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { Flip } from 'gsap/Flip'
 import './style.css'
+import { prepareButtonMotion } from './button-motion.js'
 import { createHeroCar } from './hero-car.js'
 
 gsap.registerPlugin(ScrollTrigger, Flip)
+prepareButtonMotion()
 
 // These destinations are deliberately reserved. Assign a URL here when each
 // independent page is developed; every navigation control uses the same map.
@@ -60,7 +62,7 @@ function setupMotion() {
   toggle.title = media.matches ? 'El movimiento reducido está activado en tu dispositivo.' : ''
   toggle.innerHTML = media.matches
     ? 'Movimiento reducido del sistema <span aria-hidden="true">Ⅱ</span>'
-    : `${motionPaused ? 'Activar animaciones' : 'Pausar animaciones'} <span aria-hidden="true">${motionPaused ? '▷' : 'Ⅱ'}</span>`
+    : `<span class="motion-underline">${motionPaused ? 'Activar animaciones' : 'Pausar animaciones'}</span> <span aria-hidden="true">${motionPaused ? '▷' : 'Ⅱ'}</span>`
   if (reduced()) return
   animations = gsap.context(() => {
     if (!introPlayed && !document.hidden && $('.hero').getBoundingClientRect().bottom > 0) {
@@ -111,31 +113,55 @@ updateProgress()
 
 const menu=$('.mobile-navigation')
 const menuButton=$('.menu-toggle')
-let menuOpen=false
-let menuOverflow=''
-function setMenu(open, restoreFocus=true){
-  if(open===menuOpen)return
-  menuOpen=open
-  menu.hidden=!open
-  menuButton.setAttribute('aria-expanded',String(open))
-  menuButton.setAttribute('aria-label',open?'Cerrar menú':'Abrir menú')
-  $('.header').classList.toggle('menu-open',open)
-  $('main').inert=open
-  $('.footer').inert=open
-  if(open){menuOverflow=document.body.style.overflow;document.body.style.overflow='hidden';menu.querySelector('a').focus()}
-  else{document.body.style.overflow=menuOverflow;if(restoreFocus)menuButton.focus()}
+const menuBrands = $('#menu-brands')
+for (const [key, brand] of Object.entries(brandPages)) {
+  const button = document.createElement('button')
+  button.type = 'button'
+  button.dataset.page = key
+  button.setAttribute('aria-haspopup', 'dialog')
+  const label = document.createElement('span')
+  label.className = 'motion-underline'
+  label.textContent = brand.name
+  button.append(label)
+  menuBrands.append(button)
+}
+
+// Leave the sheet mounted so its exit transition can finish and reverse mid-flight.
+menu.hidden = false
+let menuOpen = false
+let menuOverflow = ''
+function setMenu(open, restoreFocus = true) {
+  if (open === menuOpen) return
+  menuOpen = open
+  menu.inert = !open
+  menuButton.setAttribute('aria-expanded', String(open))
+  menuButton.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú')
+  header.classList.toggle('menu-open', open)
+  menu.classList.toggle('is-open', open)
+  $('main').inert = open
+  $('.footer').inert = open
+  $('.skip-link').inert = open
+  if (open) {
+    menu.scrollTop = 0
+    menuOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    menuButton.focus({ preventScroll: true })
+  } else {
+    document.body.style.overflow = menuOverflow
+    if (restoreFocus) menuButton.focus({ preventScroll: true })
+  }
 }
 on(menuButton,'click',()=>setMenu(!menuOpen))
 on(menu.querySelector('a'),'click',()=>setMenu(false))
 on($('.header .logo-link'),'click',()=>setMenu(false,false))
-on(matchMedia('(min-width: 901px)'),'change',event=>{
+on(matchMedia('(width > 1024px)'),'change',event=>{
   if(event.matches && menuOpen) {setMenu(false,false);$('.header .logo-link').focus({preventScroll:true})}
 })
 on(document,'keydown',event=>{
   if(!menuOpen)return
   if(event.key==='Escape'){event.preventDefault();setMenu(false);return}
   if(event.key==='Tab'){
-    const items=[menuButton,...menu.querySelectorAll('a,button')]
+    const items=[$('.header .logo-link'), menuButton,...menu.querySelectorAll('a,button')]
     if(event.shiftKey&&document.activeElement===items[0]){event.preventDefault();items.at(-1).focus()}
     else if(!event.shiftKey&&document.activeElement===items.at(-1)){event.preventDefault();items[0].focus()}
   }

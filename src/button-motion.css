@@ -1,0 +1,73 @@
+.roll-button {
+  --roll-paper: #fff;
+  --roll-ink: #151718;
+  --roll-progress: 0%;
+  --roll-time: 360ms;
+  --roll-ease: cubic-bezier(.22,.72,.2,1);
+  isolation: isolate;
+  overflow: hidden;
+}
+.roll-button:not(.dialog-close), .image-dialog .dialog-close { position: relative; }
+.roll-button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--roll-paper);
+  transform: translateY(calc(var(--roll-progress) - 100%));
+  transition: transform var(--roll-time) var(--roll-ease);
+  pointer-events: none;
+}
+.roll-button .roll-label {
+  display: inline-block;
+  overflow: hidden;
+  font: inherit;
+  line-height: 1.3;
+}
+.roll-button .roll-line {
+  display: block;
+  position: relative;
+  font: inherit;
+  transform: translateY(var(--roll-progress));
+  transition: transform var(--roll-time) var(--roll-ease);
+}
+.roll-button .roll-echo {
+  position: absolute;
+  inset: auto 0 100%;
+  font: inherit;
+  color: var(--roll-ink);
+}
+.roll-echo::before { content: attr(data-copy); }
+.roll-button:is(.button-light, .filter:not(.active), .footer-up, .dialog-close) {
+  --roll-paper: #151718;
+  --roll-ink: #fff;
+}
+.image-dialog .roll-button.dialog-close { --roll-paper: white; --roll-ink: #151718; }
+.navigation > .nav-contact.roll-button, .roll-button:is(.button-dark, .filter.active) {
+  border: 1px solid var(--ink);
+}
+.roll-button::before { border-radius: inherit; }
+.roll-button:focus-visible,
+.roll-button:active { --roll-progress: 100%; }
+.roll-button:is(:focus-visible, :active) > :is(svg, [aria-hidden]) { color: var(--roll-ink); }
+
+.motion-underline {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: left bottom;
+  background-size: 0% 1px;
+  background-repeat: no-repeat;
+  padding-bottom: 2px;
+  transition: background-size 270ms cubic-bezier(.3,.7,.25,1);
+}
+:is(a, button):focus-visible > .motion-underline { background-size: 100% 1px; }
+@media (hover: hover) {
+  .roll-button:hover { --roll-progress: 100%; }
+  .roll-button:hover > :is(svg, [aria-hidden]) { color: var(--roll-ink); }
+  :is(a, button):hover > .motion-underline { background-size: 100% 1px; }
+  .footer-links :is(a, button):hover, .text-link:hover { text-decoration: none; }
+  .navigation > :is(a, button):not(.nav-contact):hover { color: var(--ink); }
+}
+.motion-paused :is(.roll-line, .motion-underline), .motion-paused .roll-button::before { transition: none; }
+@media (prefers-reduced-motion: reduce) {
+  .roll-button::before, .roll-button .roll-line, .motion-underline { transition: none; }
+}

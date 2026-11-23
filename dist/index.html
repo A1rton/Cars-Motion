@@ -9,8 +9,8 @@
     <link rel="icon" href="./favicon.svg" type="image/svg+xml"/>
     <noscript><style>.hero-fallback{visibility:visible!important}</style></noscript>
     <link rel="preload" as="image" href="./media/hero/porsche-911.webp" imagesrcset="media/hero/porsche-911-960.webp 960w, media/hero/porsche-911.webp 1935w" imagesizes="(max-width: 600px) 160vw, (max-width: 900px) 145vw, 105vw" fetchpriority="high"/>
-    <script type="module" crossorigin src="./assets/index-BVIdx3kw.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-DI9Z9WSz.css">
+    <script type="module" crossorigin src="./assets/index-DcQsD7fu.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-IyaV_7XN.css">
   </head>
   <body>
     <a class="skip-link" href="#seleccion">Saltar a la selección</a>
@@ -26,14 +26,21 @@
         </nav>
         <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-navigation" aria-label="Abrir menú"><span></span><span></span></button>
       </header>
-      <nav class="mobile-navigation" id="mobile-navigation" aria-label="Navegación móvil" hidden>
-        <p class="eyebrow">CarsMotion</p>
-        <a href="#inicio">Inicio <span>01</span></a>
-        <button type="button" data-page="nosotros">Nosotros <span>02</span></button>
-        <button type="button" data-page="autos">Autos <span>03</span></button>
-        <button type="button" data-page="financiacion">Financiación <span>04</span></button>
-        <button type="button" data-page="contacto">Contacto <span>05</span></button>
-        <p>Tu próximo camino empieza acá.</p>
+      <nav class="mobile-navigation" id="mobile-navigation" aria-label="Navegación móvil" inert hidden>
+        <div class="menu-sheet">
+          <p class="menu-caption" id="menu-label">Menú</p>
+          <div class="menu-primary" role="group" aria-labelledby="menu-label">
+            <a href="#inicio" aria-current="page"><span class="motion-underline">Inicio</span></a>
+            <button type="button" data-page="nosotros"><span class="motion-underline">Nosotros</span></button>
+            <button type="button" data-page="autos"><span class="motion-underline">Autos</span></button>
+            <button type="button" data-page="financiacion"><span class="motion-underline">Financiación</span></button>
+            <button type="button" class="pill-button button-dark menu-contact" data-page="contacto">Contacto</button>
+          </div>
+          <div class="menu-marques">
+            <p class="menu-caption" id="menu-brands-label">Marcas</p>
+            <div id="menu-brands" aria-labelledby="menu-brands-label" role="group"></div>
+          </div>
+        </div>
       </nav>
       <main>
         <section class="hero" aria-labelledby="hero-title">
