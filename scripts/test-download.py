@@ -88,6 +88,62 @@ def verify_brand_navigation(page):
         page.wait_for_function(f"({boundary})(document.querySelector('#brand-track'))")
 
 
+def verify_catalog(page):
+    from playwright.sync_api import expect
+
+    catalog = page.locator("#autos-catalogo")
+    detail = page.locator("#auto-ficha")
+    desktop_link = page.locator(".navigation [data-page='autos']")
+    desktop_link.click()
+    expect(catalog).to_be_visible()
+    search = catalog.get_by_role("searchbox")
+    cards = catalog.locator(".catalog-card")
+    search.fill("mustang")
+    expect(cards).to_have_count(1)
+    expect(cards).to_have_attribute("data-id", "ford-mustang")
+    catalog.get_by_role("button", name="Limpiar filtros").click()
+    expect(search).to_have_value("")
+    expect(cards).to_have_count(10)
+    search.fill("mustang")
+    catalog.locator("#catalog-body").select_option("SUV")
+    expect(catalog.locator(".catalog-empty")).to_be_visible()
+    catalog.locator("[data-catalog-reset]").click()
+
+    catalog.locator("#catalog-order").select_option("asc")
+    expect(cards.first).to_have_attribute("data-id", "alfa-stelvio")
+    search.fill("audi")
+    cards.locator(".cm-save").click()
+    cards.locator("a").click()
+    expect(detail).to_be_visible()
+    expect(detail.locator(".vd-name")).to_have_text("RS 3")
+    expect(detail.locator(".vd-save")).to_have_attribute("aria-pressed", "true")
+    expect(detail.locator(".vd-next")).to_be_hidden()
+    detail.locator(".vd-expand").click()
+    expect(detail.locator("dialog")).to_be_visible()
+    expect(detail.locator(".vd-light-photo")).to_have_attribute("src", re.compile("audi-rs3-1600"))
+    page.keyboard.press("Escape")
+    expect(detail.locator("dialog")).to_be_hidden()
+    page.go_back()
+    expect(catalog).to_be_visible()
+    expect(search).to_have_value("audi")
+    page.reload()
+    expect(catalog).to_be_visible()
+    catalog.locator(".cm-saved-filter").click()
+    expect(cards).to_have_count(1)
+    expect(cards).to_have_attribute("data-id", "audi-rs3")
+    cards.locator(".cm-save").click()
+    expect(catalog.locator(".catalog-empty")).to_be_visible()
+    catalog.locator("[data-catalog-reset]").click()
+    search.fill("mustang")
+    page.locator(".header .logo-link").click()
+    expect(page.locator("#home-content")).to_be_visible()
+    page.locator(".brand-button[data-page='porsche']").click()
+    expect(cards).to_have_count(1)
+    expect(cards).to_have_attribute("data-id", "porsche-911")
+    page.go_back()
+    expect(page.locator("#home-content")).to_be_visible()
+
+
 def verify_browser_context(context, url):
     from playwright.sync_api import expect
     failures = []
@@ -115,20 +171,27 @@ def verify_browser_context(context, url):
         .filter(img => img.hasAttribute('src'))
         .every(img => img.complete && img.naturalWidth > 0)""")
 
-    brands = ("Porsche", "Lexus", "Mercedes-Benz", "Alfa Romeo", "BMW",
-              "Volvo", "DS Automobiles", "Audi", "Jeep")
+    brands = ("porsche", "lexus", "mercedes-benz", "alfa-romeo", "bmw",
+              "volvo", "ds", "audi", "jeep")
     expect(page.locator(".brand-button")).to_have_count(len(brands))
     verify_brand_navigation(page)
     for brand in brands:
-        page.get_by_role("button", name=f"Ver autos {brand}", exact=True).click()
-        expect(page.locator("#future-title")).to_have_text(f"Autos {brand}")
-        page.keyboard.press("Escape")
+        page.locator(f".brand-button[data-page='{brand}']").click()
+        expect(page).to_have_url(re.compile(rf"#autos/{brand}$"))
+        catalog = page.locator("#autos-catalogo")
+        expect(catalog).to_be_visible()
+        expect(catalog.locator(f"[data-brand='{brand}']")).to_have_attribute("aria-pressed", "true")
+        if brand == "volvo":
+            expect(catalog.locator(".catalog-empty")).to_be_visible()
+        page.go_back()
+        expect(page.locator("#home-content")).to_be_visible()
+    verify_catalog(page)
     expect(page.locator('[data-page="login"]')).to_have_count(0)
 
     for key, count in (("all", 6), ("sedan", 1), ("compact", 1), ("suv", 1), ("sport", 3)):
         page.locator(f'.filter[data-filter="{key}"]').click()
         expect(page.locator('.vehicle-tile:visible')).to_have_count(count)
-    for key in ("nosotros", "autos", "financiacion", "contacto"):
+    for key in ("nosotros", "financiacion", "contacto"):
         page.locator(f'.navigation [data-page="{key}"]').click()
         expect(page.locator('.future-dialog')).to_be_visible()
         page.keyboard.press("Escape")
@@ -169,6 +232,14 @@ def verify_browser_context(context, url):
         page.locator(f"{entrance} [data-page='financiacion']").click()
         expect(page.locator("#future-title")).to_have_text("Financiación")
         page.keyboard.press("Escape")
+    for entrance in (".mobile-navigation", "footer"):
+        if entrance == ".mobile-navigation":
+            menu.click()
+        page.locator(f"{entrance} [data-page='autos']").click()
+        expect(page.locator("#autos-catalogo")).to_be_visible()
+        expect(menu).to_have_attribute("aria-expanded", "false")
+        page.locator(".header .logo-link").click()
+        expect(page.locator("#home-content")).to_be_visible()
     assert not failures, failures
 
 

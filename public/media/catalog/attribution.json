@@ -1,0 +1,290 @@
+[
+  {
+    "id": "audi-r8-front",
+    "file": "audi-r8-front.jpg",
+    "title": "2020 Audi R8 V10 5.2 Front.jpg",
+    "author": "Vauxford",
+    "source": "https://commons.wikimedia.org/wiki/File:2020_Audi_R8_V10_5.2_Front.jpg",
+    "download": "https://upload.wikimedia.org/wikipedia/commons/f/f1/2020_Audi_R8_V10_5.2_Front.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "width": 4215,
+    "height": 2251,
+    "originalBytes": 4115125,
+    "acquired": "2026-11-12",
+    "modifications": "Proportional resize to 800px and 1600px width; WebP conversion. No cropping, retouching, color adjustment or perspective changes. Original plate masking, if any, belongs to the source photograph.",
+    "description": "2020 Audi R8 V10 5.2 Front Taken in Shirley, West Midlands",
+    "sha256": "6dc1258728a4f5349e6c47871366ea575f40cea147fc06c3260c56cdbb6a0d21",
+    "originalFile": "audi-r8-front.jpg",
+    "derivatives": [
+      {
+        "file": "audi-r8-front-800.webp",
+        "width": 800,
+        "height": 427,
+        "bytes": 48958,
+        "sha256": "2f53e542befc33e049623df1feab3dc4ed3085ce715b3edaf5ec994924f17e91"
+      },
+      {
+        "file": "audi-r8-front-1600.webp",
+        "width": 1600,
+        "height": 854,
+        "bytes": 128158,
+        "sha256": "865321a9b18240f59eca56d9d3c684732bd8eaefaddea0ea29ab45f3117b3561"
+      }
+    ],
+    "derivativeLicense": "CC BY-SA 4.0",
+    "usage": "Model-reference photograph, not confirmed Cars Motion stock."
+  },
+  {
+    "id": "audi-r8-rear",
+    "file": "audi-r8-rear.jpg",
+    "title": "2020 Audi R8 V10 5.2 Rear.jpg",
+    "author": "Vauxford",
+    "source": "https://commons.wikimedia.org/wiki/File:2020_Audi_R8_V10_5.2_Rear.jpg",
+    "download": "https://upload.wikimedia.org/wikipedia/commons/4/45/2020_Audi_R8_V10_5.2_Rear.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "width": 4634,
+    "height": 2473,
+    "originalBytes": 5136700,
+    "acquired": "2026-11-12",
+    "modifications": "Proportional resize to 800px and 1600px width; WebP conversion. No cropping, retouching, color adjustment or perspective changes. Original plate masking, if any, belongs to the source photograph.",
+    "description": "2020 Audi R8 V10 5.2 Rear Taken in Shirley, West Midlands",
+    "sha256": "2910c01267438ad7fc15f38c3c9aab3e146d737cab8f8628e33824a5170db742",
+    "originalFile": "audi-r8-rear.jpg",
+    "derivatives": [
+      {
+        "file": "audi-r8-rear-800.webp",
+        "width": 800,
+        "height": 427,
+        "bytes": 54932,
+        "sha256": "8ccc82671d1a32daa7e807acc79775be594f6b3d24444c039e509daab8fb9941"
+      },
+      {
+        "file": "audi-r8-rear-1600.webp",
+        "width": 1600,
+        "height": 854,
+        "bytes": 144570,
+        "sha256": "2afa6de23c9845905b9c1359e02d53883d960fa59d3a136c5eecfbeebd97b6bd"
+      }
+    ],
+    "derivativeLicense": "CC BY-SA 4.0",
+    "usage": "Model-reference photograph, not confirmed Cars Motion stock."
+  },
+  {
+    "id": "mercedes-a45-front",
+    "file": "mercedes-a45-front.jpg",
+    "title": "2020 Mercedes-AMG A 45 S 4MATIC+ Automatic 2.0 Front.jpg",
+    "author": "Vauxford",
+    "source": "https://commons.wikimedia.org/wiki/File:2020_Mercedes-AMG_A_45_S_4MATIC%2B_Automatic_2.0_Front.jpg",
+    "download": "https://upload.wikimedia.org/wikipedia/commons/2/29/2020_Mercedes-AMG_A_45_S_4MATIC%2B_Automatic_2.0_Front.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "width": 4827,
+    "height": 2419,
+    "originalBytes": 6443993,
+    "acquired": "2026-11-12",
+    "modifications": "Proportional resize to 800px and 1600px width; WebP conversion. No cropping, retouching, color adjustment or perspective changes. Original plate masking, if any, belongs to the source photograph.",
+    "description": "2020 Mercedes-AMG A 45 S 4MATIC+ Automatic 2.0 Front Front Taken in Stratford-upon-Avon",
+    "sha256": "0bf1afdc14cc0516a4816a6a319c215df044bd8f42705dd9f9be0ca5dd5252a9",
+    "originalFile": "mercedes-a45-front.jpg",
+    "derivatives": [
+      {
+        "file": "mercedes-a45-front-800.webp",
+        "width": 800,
+        "height": 401,
+        "bytes": 75764,
+        "sha256": "b91b548dba4e2a140225be22cf6ab3019294332d974da51c1de5e1b7239ba75d"
+      },
+      {
+        "file": "mercedes-a45-front-1600.webp",
+        "width": 1600,
+        "height": 802,
+        "bytes": 249948,
+        "sha256": "3f729d56e8695123aa60704ef9b42c3c7afc15293bc6137058314a01235d6684"
+      }
+    ],
+    "derivativeLicense": "CC BY-SA 4.0",
+    "usage": "Model-reference photograph, not confirmed Cars Motion stock."
+  },
+  {
+    "id": "mercedes-a45-rear",
+    "file": "mercedes-a45-rear.jpg",
+    "title": "2020 Mercedes-AMG A 45 S 4MATIC+ Automatic 2.0 Rear.jpg",
+    "author": "Vauxford",
+    "source": "https://commons.wikimedia.org/wiki/File:2020_Mercedes-AMG_A_45_S_4MATIC%2B_Automatic_2.0_Rear.jpg",
+    "download": "https://upload.wikimedia.org/wikipedia/commons/c/c7/2020_Mercedes-AMG_A_45_S_4MATIC%2B_Automatic_2.0_Rear.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "width": 4601,
+    "height": 2279,
+    "originalBytes": 5985033,
+    "acquired": "2026-11-12",
+    "modifications": "Proportional resize to 800px and 1600px width; WebP conversion. No cropping, retouching, color adjustment or perspective changes. Original plate masking, if any, belongs to the source photograph.",
+    "description": "2020 Mercedes-AMG A 45 S 4MATIC+ Automatic 2.0 Rear Taken in Stratford-upon-Avon",
+    "sha256": "d0dac5e1f00f55298a6e7b5ae222691f4e92de4cdaa7368d3f140a99be1b9a82",
+    "originalFile": "mercedes-a45-rear.jpg",
+    "derivatives": [
+      {
+        "file": "mercedes-a45-rear-800.webp",
+        "width": 800,
+        "height": 396,
+        "bytes": 76858,
+        "sha256": "22d77019cb3c489249531b6cb3b0d5e0bf9a8c580422c21e900edea017dec563"
+      },
+      {
+        "file": "mercedes-a45-rear-1600.webp",
+        "width": 1600,
+        "height": 793,
+        "bytes": 256256,
+        "sha256": "895acb3e08b833f753bc3f80a1d568d46a3f035242ead628ec1c20f249ad9a34"
+      }
+    ],
+    "derivativeLicense": "CC BY-SA 4.0",
+    "usage": "Model-reference photograph, not confirmed Cars Motion stock."
+  },
+  {
+    "id": "golf-gti-front",
+    "file": "golf-gti-front.jpg",
+    "title": "2017 Volkswagen Golf GTi TSi 2.0 Front.jpg",
+    "author": "Vauxford",
+    "source": "https://commons.wikimedia.org/wiki/File:2017_Volkswagen_Golf_GTi_TSi_2.0_Front.jpg",
+    "download": "https://upload.wikimedia.org/wikipedia/commons/2/28/2017_Volkswagen_Golf_GTi_TSi_2.0_Front.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "width": 4987,
+    "height": 2767,
+    "originalBytes": 6826398,
+    "acquired": "2026-11-12",
+    "modifications": "Proportional resize to 800px and 1600px width; WebP conversion. No cropping, retouching, color adjustment or perspective changes. Original plate masking, if any, belongs to the source photograph.",
+    "description": "2017 Volkswagen Golf GTi TSi 2.0 Front Taken in Leamington Spa",
+    "sha256": "92f3168fe7cba5cf6c82db2f5d4ab05504fe0acfc994487726a8d4c7a513e4f6",
+    "originalFile": "golf-gti-front.jpg",
+    "derivatives": [
+      {
+        "file": "golf-gti-front-800.webp",
+        "width": 800,
+        "height": 444,
+        "bytes": 74238,
+        "sha256": "f4ac142dac1f1fbe8c10b53d6b53b7aab515eacd012f63a0b33dfb2b7b4d60bf"
+      },
+      {
+        "file": "golf-gti-front-1600.webp",
+        "width": 1600,
+        "height": 888,
+        "bytes": 220398,
+        "sha256": "b901f82c1afc5e5ac608699305d955a65a32ef04da6de3c03769304e93cdc49c"
+      }
+    ],
+    "derivativeLicense": "CC BY-SA 4.0",
+    "usage": "Model-reference photograph, not confirmed Cars Motion stock."
+  },
+  {
+    "id": "golf-gti-rear",
+    "file": "golf-gti-rear.jpg",
+    "title": "2017 Volkswagen Golf GTi TSi 2.0 Rear.jpg",
+    "author": "Vauxford",
+    "source": "https://commons.wikimedia.org/wiki/File:2017_Volkswagen_Golf_GTi_TSi_2.0_Rear.jpg",
+    "download": "https://upload.wikimedia.org/wikipedia/commons/9/96/2017_Volkswagen_Golf_GTi_TSi_2.0_Rear.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "width": 4977,
+    "height": 2853,
+    "originalBytes": 6084191,
+    "acquired": "2026-11-12",
+    "modifications": "Proportional resize to 800px and 1600px width; WebP conversion. No cropping, retouching, color adjustment or perspective changes. Original plate masking, if any, belongs to the source photograph.",
+    "description": "2017 Volkswagen Golf GTi TSi 2.0 Rear Taken in Leamington Spa",
+    "sha256": "ad19ed85339c99b2c80f10ba38bcfe516c3e2c325ed8c673e9086a9e0941ec3e",
+    "originalFile": "golf-gti-rear.jpg",
+    "derivatives": [
+      {
+        "file": "golf-gti-rear-800.webp",
+        "width": 800,
+        "height": 459,
+        "bytes": 61620,
+        "sha256": "18e2aa85b18f9d1ece8138d3cc7b8ff0b303a5d54bfe95517e7a74a84c8138eb"
+      },
+      {
+        "file": "golf-gti-rear-1600.webp",
+        "width": 1600,
+        "height": 917,
+        "bytes": 162552,
+        "sha256": "d8d4d460422d1a4a0e5ff33a84d3cabaea72c76baf11a195e3ea7d3fb1e89058"
+      }
+    ],
+    "derivativeLicense": "CC BY-SA 4.0",
+    "usage": "Model-reference photograph, not confirmed Cars Motion stock."
+  },
+  {
+    "id": "bmw-m5-pair-front",
+    "file": "bmw-m5-pair-front.jpg",
+    "title": "2018 BMW M5 front.jpg",
+    "author": "LuvsMG481",
+    "source": "https://commons.wikimedia.org/wiki/File:2018_BMW_M5_front.jpg",
+    "download": "https://upload.wikimedia.org/wikipedia/commons/c/ca/2018_BMW_M5_front.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "width": 3673,
+    "height": 1487,
+    "originalBytes": 2579931,
+    "acquired": "2026-11-12",
+    "modifications": "Proportional resize to 800px and 1600px width; WebP conversion. No cropping, retouching, color adjustment or perspective changes. Original plate masking, if any, belongs to the source photograph.",
+    "description": "2018 BMW M5 in Parramatta, New South Wales.",
+    "sha256": "509d503308b0c61d9c6328da28a0ce5a038079c01850affed827d5dd07818360",
+    "originalFile": "bmw-m5-pair-front.jpg",
+    "derivatives": [
+      {
+        "file": "bmw-m5-pair-front-800.webp",
+        "width": 800,
+        "height": 324,
+        "bytes": 62794,
+        "sha256": "77963e12875d7df0030232ed26cc1dc8d8955ce8c09f9a5c6447bb0afbafd316"
+      },
+      {
+        "file": "bmw-m5-pair-front-1600.webp",
+        "width": 1600,
+        "height": 648,
+        "bytes": 175184,
+        "sha256": "20db90b99418a46d5b2034924da536f484d88688a0934ec50d8c2fad9cda342c"
+      }
+    ],
+    "derivativeLicense": "CC BY-SA 4.0",
+    "usage": "Model-reference photograph, not confirmed Cars Motion stock."
+  },
+  {
+    "id": "bmw-m5-pair-rear",
+    "file": "bmw-m5-pair-rear.jpg",
+    "title": "2018 BMW M5 rear.jpg",
+    "author": "LuvsMG481",
+    "source": "https://commons.wikimedia.org/wiki/File:2018_BMW_M5_rear.jpg",
+    "download": "https://upload.wikimedia.org/wikipedia/commons/0/02/2018_BMW_M5_rear.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "width": 3652,
+    "height": 1518,
+    "originalBytes": 2657473,
+    "acquired": "2026-11-12",
+    "modifications": "Proportional resize to 800px and 1600px width; WebP conversion. No cropping, retouching, color adjustment or perspective changes. Original plate masking, if any, belongs to the source photograph.",
+    "description": "2018 BMW M5 in Parramatta, New South Wales.",
+    "sha256": "3b2b2a361242debce95b396a725e6da2e56e38133e34c778a5220362e369b14a",
+    "originalFile": "bmw-m5-pair-rear.jpg",
+    "derivatives": [
+      {
+        "file": "bmw-m5-pair-rear-800.webp",
+        "width": 800,
+        "height": 333,
+        "bytes": 57706,
+        "sha256": "4bd3737e490169f4241e2f92136189fe4bcf32f3627d6a53ce011e700cd0b528"
+      },
+      {
+        "file": "bmw-m5-pair-rear-1600.webp",
+        "width": 1600,
+        "height": 665,
+        "bytes": 165066,
+        "sha256": "52978d564c85c13d67915ade8dd812bde60bf39557793c2eceec6dd528a5cd9c"
+      }
+    ],
+    "derivativeLicense": "CC BY-SA 4.0",
+    "usage": "Model-reference photograph, not confirmed Cars Motion stock."
+  }
+]

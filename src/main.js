@@ -3,6 +3,8 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { Flip } from 'gsap/Flip'
 import './style.css'
+import { brands } from './catalog-data.js'
+import { mountAutoRoutes } from './auto-routes.js'
 import { prepareButtonMotion } from './button-motion.js'
 import { createHeroCar } from './hero-car.js'
 
@@ -13,21 +15,8 @@ prepareButtonMotion()
 // independent page is developed; every navigation control uses the same map.
 const pages = {
   nosotros: { title:'Nuestra historia, muy pronto.', description:'Estamos preparando un espacio para que conozcas más de CarsMotion y de nuestra pasión por los automóviles.', href:null },
-  autos: { title:'Tu próximo auto está por llegar.', description:'Estamos preparando nuestra colección. Mientras tanto, recorré las imágenes y descubrí el universo CarsMotion.', href:null },
   financiacion: { title:'Financiación', description:'Próximamente vas a poder consultar acá las opciones de financiación.', href:null },
   contacto: { title:'Pronto vamos a estar más cerca.', description:'Nuestro espacio de contacto está en camino. Muy pronto vas a poder conversar con CarsMotion.', href:null },
-}
-
-const brandPages = {
-  porsche: { name: 'Porsche', href: null },
-  lexus: { name: 'Lexus', href: null },
-  'mercedes-benz': { name: 'Mercedes-Benz', href: null },
-  'alfa-romeo': { name: 'Alfa Romeo', href: null },
-  bmw: { name: 'BMW', href: null },
-  volvo: { name: 'Volvo', href: null },
-  ds: { name: 'DS Automobiles', href: null },
-  audi: { name: 'Audi', href: null },
-  jeep: { name: 'Jeep', href: null },
 }
 
 const $ = selector => document.querySelector(selector)
@@ -114,11 +103,11 @@ updateProgress()
 const menu=$('.mobile-navigation')
 const menuButton=$('.menu-toggle')
 const menuBrands = $('#menu-brands')
-for (const [key, brand] of Object.entries(brandPages)) {
-  const button = document.createElement('button')
-  button.type = 'button'
+for (const brand of brands.filter(brand => brand.logo)) {
+  const key = brand.id
+  const button = document.createElement('a')
+  button.href = '#autos/' + key
   button.dataset.page = key
-  button.setAttribute('aria-haspopup', 'dialog')
   const label = document.createElement('span')
   label.className = 'motion-underline'
   label.textContent = brand.name
@@ -138,7 +127,7 @@ function setMenu(open, restoreFocus = true) {
   menuButton.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú')
   header.classList.toggle('menu-open', open)
   menu.classList.toggle('is-open', open)
-  $('main').inert = open
+  $$('main').forEach(view => { view.inert = open })
   $('.footer').inert = open
   $('.skip-link').inert = open
   if (open) {
@@ -260,22 +249,18 @@ brandButtons.forEach(button => {
   on(button, 'blur', resetAngle)
 })
 
-$$('[data-page]').forEach(button=>on(button,'click',()=>{
-  const key = button.dataset.page
-  const brand = brandPages[key]
-  const page = brand ? {
-    title: `Autos ${brand.name}`,
-    description: `Estamos preparando la selección de ${brand.name}. Pronto vas a poder explorarla acá.`,
-    href: brand.href,
-  } : pages[key]
-  if(!page)return
-  if(page.href){location.href=page.href;return}
-  const fromMenu=menu.contains(button)
-  setMenu(false,false)
-  $('#future-title').textContent=page.title
-  $('#future-description').textContent=page.description
-  openDialog(futureDialog,fromMenu?menuButton:button)
-}))
+function showFuture(key, trigger, modelName) {
+  const page = pages[key]
+  if (!page) return
+  const origin = menu.contains(trigger) ? menuButton : trigger
+  setMenu(false, false)
+  $('#future-title').textContent = page.title
+  $('#future-description').textContent = modelName
+    ? 'Próximamente vas a poder consultarnos por el ' + modelName + '.'
+    : page.description
+  openDialog(futureDialog, origin)
+}
+$$('button[data-page]').forEach(button => on(button, 'click', () => showFuture(button.dataset.page, button)))
 on($('.future-back'),'click',()=>closeDialog(futureDialog))
 
 const tiles=$$('.vehicle-tile')
@@ -314,6 +299,20 @@ tiles.forEach((tile,i)=>on(tile,'click',()=>{setImage(i);openDialog(imageDialog,
 on($('#image-next'),'click',()=>setImage(currentImage+1))
 on(imageDialog,'keydown',event=>{if(event.key==='ArrowRight'){event.preventDefault();setImage(currentImage+1)}if(event.key==='ArrowLeft'){event.preventDefault();setImage(currentImage-1)}})
 $('#year').textContent=String(new Date().getFullYear())
+
+mountAutoRoutes({
+  signal: events.signal,
+  closeOverlays() {
+    setMenu(false, false)
+    $$('dialog[open]').forEach(closeDialog)
+  },
+  contact: (trigger, model) => showFuture('contacto', trigger, model.name),
+  reduced,
+  refreshHome() {
+    updateBrandArrows()
+    refreshLayout()
+  },
+})
 
 if(import.meta.hot)import.meta.hot.dispose(()=>{
   disposed=true

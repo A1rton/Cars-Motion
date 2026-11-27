@@ -9,8 +9,8 @@
     <link rel="icon" href="./favicon.svg" type="image/svg+xml"/>
     <noscript><style>.hero-fallback{visibility:visible!important}</style></noscript>
     <link rel="preload" as="image" href="./media/hero/porsche-911.webp" imagesrcset="media/hero/porsche-911-960.webp 960w, media/hero/porsche-911.webp 1935w" imagesizes="(max-width: 600px) 160vw, (max-width: 900px) 145vw, 105vw" fetchpriority="high"/>
-    <script type="module" crossorigin src="./assets/index-DcQsD7fu.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-IyaV_7XN.css">
+    <script type="module" crossorigin src="./assets/index-CfHf1ros.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-D8XaBpuy.css">
   </head>
   <body>
     <a class="skip-link" href="#seleccion">Saltar a la selección</a>
@@ -20,7 +20,7 @@
         <nav class="navigation" aria-label="Navegación principal">
           <a class="nav-current" href="#inicio" aria-current="page">Inicio</a>
           <button type="button" data-page="nosotros">Nosotros</button>
-          <button type="button" data-page="autos">Autos</button>
+          <a href="#autos" data-page="autos">Autos</a>
           <button type="button" data-page="financiacion">Financiación</button>
           <button type="button" data-page="contacto" class="nav-contact">Contacto <span aria-hidden="true">↗</span></button>
         </nav>
@@ -32,7 +32,7 @@
           <div class="menu-primary" role="group" aria-labelledby="menu-label">
             <a href="#inicio" aria-current="page"><span class="motion-underline">Inicio</span></a>
             <button type="button" data-page="nosotros"><span class="motion-underline">Nosotros</span></button>
-            <button type="button" data-page="autos"><span class="motion-underline">Autos</span></button>
+            <a href="#autos" data-page="autos"><span class="motion-underline">Autos</span></a>
             <button type="button" data-page="financiacion"><span class="motion-underline">Financiación</span></button>
             <button type="button" class="pill-button button-dark menu-contact" data-page="contacto">Contacto</button>
           </div>
@@ -42,7 +42,7 @@
           </div>
         </div>
       </nav>
-      <main>
+      <main id="home-content" tabindex="-1">
         <section class="hero" aria-labelledby="hero-title">
           <div class="hero-copy">
             <h1 id="hero-title"><span class="title-line"><span>Hay autos.</span></span><span class="title-line"><span>Y hay formas</span></span><span class="title-line"><span>de sentir.</span></span></h1>
@@ -71,33 +71,33 @@
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m6-6-6 6 6 6"/></svg>
           </button>
           <div class="brand-track" id="brand-track">
-            <button class="brand-button brand-porsche" type="button" data-page="porsche" aria-label="Ver autos Porsche" aria-haspopup="dialog">
+            <a href="#autos/porsche" class="brand-button brand-porsche"  data-page="porsche" aria-label="Ver autos Porsche">
               <img src="./media/brands/porsche.svg" width="49" height="62" alt="" />
-            </button>
-            <button class="brand-button brand-lexus" type="button" data-page="lexus" aria-label="Ver autos Lexus" aria-haspopup="dialog">
+            </a>
+            <a href="#autos/lexus" class="brand-button brand-lexus"  data-page="lexus" aria-label="Ver autos Lexus">
               <img src="./media/brands/lexus.svg" width="61" height="45" alt="" />
-            </button>
-            <button class="brand-button brand-mercedes" type="button" data-page="mercedes-benz" aria-label="Ver autos Mercedes-Benz" aria-haspopup="dialog">
+            </a>
+            <a href="#autos/mercedes-benz" class="brand-button brand-mercedes"  data-page="mercedes-benz" aria-label="Ver autos Mercedes-Benz">
               <img src="./media/brands/mercedes-benz.svg" width="51" height="51" alt="" />
-            </button>
-            <button class="brand-button brand-alfa" type="button" data-page="alfa-romeo" aria-label="Ver autos Alfa Romeo" aria-haspopup="dialog">
+            </a>
+            <a href="#autos/alfa-romeo" class="brand-button brand-alfa"  data-page="alfa-romeo" aria-label="Ver autos Alfa Romeo">
               <img src="./media/brands/alfa-romeo.png" width="480" height="480" alt="" />
-            </button>
-            <button class="brand-button brand-bmw" type="button" data-page="bmw" aria-label="Ver autos BMW" aria-haspopup="dialog">
+            </a>
+            <a href="#autos/bmw" class="brand-button brand-bmw"  data-page="bmw" aria-label="Ver autos BMW">
               <img src="./media/brands/bmw.svg" width="52" height="52" alt="" />
-            </button>
-            <button class="brand-button" type="button" data-page="volvo" aria-label="Ver autos Volvo" aria-haspopup="dialog">
+            </a>
+            <a href="#autos/volvo" class="brand-button"  data-page="volvo" aria-label="Ver autos Volvo">
               <img src="./media/brands/volvo.png" alt="" />
-            </button>
-            <button class="brand-button" type="button" data-page="ds" aria-label="Ver autos DS Automobiles" aria-haspopup="dialog">
+            </a>
+            <a href="#autos/ds" class="brand-button"  data-page="ds" aria-label="Ver autos DS Automobiles">
               <img src="./media/brands/ds.png" alt="" />
-            </button>
-            <button class="brand-button brand-wide" type="button" data-page="audi" aria-label="Ver autos Audi" aria-haspopup="dialog">
+            </a>
+            <a href="#autos/audi" class="brand-button brand-wide"  data-page="audi" aria-label="Ver autos Audi">
               <img src="./media/brands/audi.svg" alt="" />
-            </button>
-            <button class="brand-button brand-wide" type="button" data-page="jeep" aria-label="Ver autos Jeep" aria-haspopup="dialog">
+            </a>
+            <a href="#autos/jeep" class="brand-button brand-wide"  data-page="jeep" aria-label="Ver autos Jeep">
               <img src="./media/brands/jeep.png" alt="" />
-            </button>
+            </a>
           </div>
           <button class="brand-arrow brand-next" type="button" aria-label="Marcas siguientes" aria-controls="brand-track">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
@@ -130,7 +130,7 @@
             <button class="vehicle-tile" type="button" data-category="suv" data-vehicle="bmw" aria-label="Ver imagen de BMW, otra perspectiva"><span class="tile-media"><img src="./media/bmw-800.webp" srcset="media/bmw-800.webp 800w, media/bmw-1600.webp 1600w" sizes="(max-width: 600px) 90vw, (max-width: 1000px) 44vw, 29vw" width="1683" height="934" loading="lazy" alt="SUV BMW sobre una avenida mojada al anochecer"/><span class="tile-expand" aria-hidden="true">↗</span></span><span class="tile-caption"><span>BMW</span><span>Otra perspectiva</span></span></button>
             <button class="vehicle-tile" type="button" data-category="sport" data-vehicle="porsche-sunset" aria-label="Ver imagen de Porsche, el camino es tuyo"><span class="tile-media"><img src="./media/porsche-sunset-800.webp" srcset="media/porsche-sunset-800.webp 800w, media/porsche-sunset-1600.webp 1600w" sizes="(max-width: 600px) 90vw, (max-width: 1000px) 44vw, 29vw" width="1916" height="821" loading="lazy" alt="Porsche oscuro en una curva al atardecer"/><span class="tile-expand" aria-hidden="true">↗</span></span><span class="tile-caption"><span>Porsche</span><span>El camino es tuyo</span></span></button>
           </div>
-          <div class="selection-footer"><button class="text-link" type="button" data-page="autos">Descubrir nuestros autos <span aria-hidden="true">→</span></button><p>Imágenes de presentación · No representan stock disponible.</p></div>
+          <div class="selection-footer"><a href="#autos" class="text-link"  data-page="autos">Descubrir nuestros autos <span aria-hidden="true">→</span></a><p>Imágenes de presentación · No representan stock disponible.</p></div>
           <p class="sr-only" id="filter-status" role="status" aria-live="polite"></p>
         </section>
 
@@ -146,13 +146,15 @@
 
         <section class="closing section-space" aria-labelledby="closing-title"><div class="closing-panel"><img src="./media/mustang-1600.webp" width="1916" height="821" loading="lazy" alt="" class="closing-image"/><div class="closing-shade"></div><div class="closing-copy"><h2 id="closing-title" data-reveal>Hay un camino<br/>esperando por vos.</h2><p data-reveal>Empezá a imaginarlo con CarsMotion.</p><button type="button" class="pill-button button-light" data-page="contacto" data-reveal>Hablemos <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15M13 5l7 7-7 7"/></svg></button></div></div></section>
       </main>
+      <main id="autos-catalogo" tabindex="-1" aria-label="Catálogo de autos" hidden></main>
+      <main id="auto-ficha" tabindex="-1" aria-label="Ficha del vehículo" hidden></main>
       <footer class="footer">
         <div class="footer-columns">
           <section aria-labelledby="footer-explore">
             <h2 id="footer-explore">Explorá</h2>
             <nav class="footer-links" aria-label="Navegación al pie">
               <button type="button" data-page="nosotros">Nosotros</button>
-              <button type="button" data-page="autos">Autos</button>
+              <a href="#autos" data-page="autos">Autos</a>
               <button type="button" data-page="financiacion">Financiación</button>
               <button type="button" data-page="contacto">Contacto</button>
             </nav>
