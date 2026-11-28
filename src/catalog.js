@@ -3,7 +3,6 @@ import { fields, ranges, conditionNames, known, validPrice, matchesFilters, labe
 import { Flip } from 'gsap/Flip'
 import { brands, imageUrl, vehicles } from './catalog-data.js'
 import { catalogIcon as icon } from './catalog-icons.js'
-import { isFavorite, toggleFavorite } from './favorites.js'
 import './catalog.css'
 
 const brandName = new Map(brands.map(brand => [brand.id, brand.name]))
@@ -35,44 +34,25 @@ function buildCard(vehicle) {
   frame.append(img)
   const info = el('div', 'cm-card-info')
   info.append(el('p', 'cm-maker', brandName.get(vehicle.brand)), el('h3','cm-model',vehicle.name))
-  const summary = [vehicle.category, vehicle.color]
-  if (vehicle.condition === 'used') {
-    summary.push(vehicle.year, Number.isFinite(vehicle.mileage) ? vehicle.mileage.toLocaleString('es-AR') + ' km' : null, vehicle.transmission, vehicle.fuel)
-  } else if (vehicle.condition === 'new') {
-    summary.push(vehicle.engine, Number.isFinite(vehicle.power) ? vehicle.power + ' CV' : null)
-  }
-  if (vehicle.version) info.querySelector('h3').append(' · ' + vehicle.version)
-  info.append(el('p', 'cm-category', summary.filter(known).join(' · ')))
-  const terms = [conditionNames[vehicle.condition], vehicle.availability]
-  if (validPrice(vehicle)) terms.push(vehicle.currency + ' ' + vehicle.price.toLocaleString('es-AR'))
-  if (terms.some(known)) info.append(el('p', 'cm-commercial', terms.filter(known).join(' · ')))
-  const arrow = el('span', 'cm-card-arrow')
-  arrow.innerHTML = icon('arrow-up-right')
-  info.append(arrow)
+  info.append(el('p', 'cm-version', vehicle.condition ? vehicle.version : 'Versión sugerida · ' + vehicle.version))
+  const gearbox = vehicle.transmission || 'Transmisión a confirmar'
+  info.append(el('p', 'cm-category', [gearbox, vehicle.doors && vehicle.doors + ' puertas'].filter(Boolean).join(' · ')))
   link.append(frame, info)
-  const save = el('button','cm-save button-light')
-  save.dataset.motionIcon = ''
-  save.type = 'button'
-  save.innerHTML = icon('heart')
-  save.setAttribute('aria-label', 'Guardar ' + fullName(vehicle) + ' en favoritos')
-  save.setAttribute('aria-pressed', String(isFavorite(vehicle.id)))
-  save.onclick = () => toggleFavorite(vehicle.id)
-  card.append(link, save)
+  card.append(link)
   return card
 }
 
 
 export function initCatalog(container, { navigateBrand }) {
   const filters = {}
-  let savedOnly = false
   let animation
   const smallViewport = matchMedia('(max-width: 900px)')
   container.innerHTML = `
     <header class="cm-hero">
       <picture><source media="(max-width:600px)" srcset="${imageUrl('porsche-sunset-800.webp')}"><img alt="" src="${imageUrl('porsche-sunset-1600.webp')}"></picture>
-      <div class="cm-hero-content"><nav aria-label="Ruta de navegación"><a href="#inicio">Inicio</a><span aria-hidden="true">/</span>Autos</nav>
-        <div><h1 class="cm-title" tabindex="-1">Catálogo de autos</h1><p class="cm-hero-description">Explorá la colección por marca, carrocería y condición.</p></div>
-      </div><span class="cm-hero-caption">Porsche 911</span>
+      <div class="cm-hero-content">
+        <div><h1 class="cm-title" tabindex="-1">Catálogo de autos</h1></div>
+      </div>
     </header>
     <div class="cm-content"><div class="cm-layout">
       <section class="cm-results" aria-labelledby="cm-models">
@@ -81,7 +61,6 @@ export function initCatalog(container, { navigateBrand }) {
         </header>
         <div class="cm-search-row">
           <label class="cm-search">${icon('search')}<span class="sr-only">Buscar marca o modelo</span><input type="search" placeholder="Buscar marca o modelo" autocomplete="off"></label>
-          <button type="button" class="cm-saved-filter pill-button button-light" aria-pressed="false">${icon('heart')} Favoritos <span data-saved-count>0</span></button>
           <button type="button" class="cm-open-filters cm-filter-open pill-button button-dark" aria-haspopup="dialog" aria-controls="cm-dialog">${icon('sliders-horizontal')} Filtrar <span data-filter-count>0</span></button>
         </div>
         <div class="cm-active cm-chips" role="group" aria-label="Filtros activos" hidden><button type="button" class="cm-clear text-link">Limpiar filtros</button></div>
@@ -108,7 +87,6 @@ export function initCatalog(container, { navigateBrand }) {
   const order = find('#catalog-order')
   const active = find('.cm-active')
   const clear = find('.cm-clear')
-  const savedFilter = find('.cm-saved-filter')
   const dialog = find('.cm-filter-dialog')
   const panel = find('.cm-filter-panel')
   const controls = new Map()
@@ -254,7 +232,6 @@ export function initCatalog(container, { navigateBrand }) {
     active.querySelectorAll('.cm-chip').forEach(chip => chip.remove())
     const entries = Object.entries(filters).map(([key, value]) => [key, fields[key] + ' · ' + labelFor(key, value, brandName) + (ranges[key] === 'price' ? ' ' + priceCurrency : '')])
     if (search.value.trim()) entries.push(['search', search.value.trim()])
-    if (savedOnly) entries.push(['saved', 'Favoritos'])
     for (const [key, label] of entries) {
       const chip = el('button', 'cm-chip', label)
       chip.type = 'button'
@@ -262,9 +239,8 @@ export function initCatalog(container, { navigateBrand }) {
       chip.insertAdjacentHTML('beforeend', icon('x'))
       chip.onclick = () => {
         if (key === 'search') search.value = ''
-        else if (key === 'saved') savedOnly = false
         else change(key, '')
-        if (key === 'search' || key === 'saved') render(true)
+        if (key === 'search') render(true)
         const nextFocus = active.querySelector('.cm-chip') || search
         nextFocus.focus({preventScroll:true})
       }
@@ -278,7 +254,7 @@ export function initCatalog(container, { navigateBrand }) {
     updateControls()
     chips()
     const tokens = normalize(search.value).split(/\s+/).filter(Boolean)
-    const selected = vehicles.filter(v => matchesFilters(v, filters, priceCurrency) && (!savedOnly || isFavorite(v.id)) &&
+    const selected = vehicles.filter(v => matchesFilters(v, filters, priceCurrency) &&
       tokens.every(token => normalize(fullName(v) + ' ' + v.category + ' ' + (v.version || '')).includes(token)))
     if (order.value !== 'featured') {
       const direction = order.value === 'asc' ? 1 : -1
@@ -289,31 +265,21 @@ export function initCatalog(container, { navigateBrand }) {
       !document.documentElement.classList.contains('motion-paused')
     const survivors = selected.map(v => cards.get(v.id)).filter(card => grid.contains(card))
     const before = canMove && survivors.length ? Flip.getState(survivors) : null
-    const focus = document.activeElement
-    for (const v of selected) {
-      const save = cards.get(v.id).querySelector('.cm-save')
-      save.setAttribute('aria-pressed', String(isFavorite(v.id)))
-    }
     grid.replaceChildren(...selected.map(v => cards.get(v.id)))
     if (before) animation = Flip.from(before, { targets:survivors, duration:.5, ease:'power2.inOut' })
-    if (focus?.matches('.cm-save')) (grid.contains(focus) ? focus : savedFilter).focus({ preventScroll:true })
-    savedFilter.setAttribute('aria-pressed', String(savedOnly))
-    find('[data-saved-count]').textContent = vehicles.filter(v => isFavorite(v.id)).length
     find('.cm-count').textContent = selected.length === 1 ? '1 modelo' : selected.length + ' modelos'
     find('[data-mobile-results]').textContent = '(' + selected.length + ')'
     const empty = find('.catalog-empty')
     empty.hidden = selected.length > 0
     if (!selected.length) {
-      const noSaved = savedOnly && !vehicles.some(v => isFavorite(v.id))
-      empty.querySelector('h3').textContent = noSaved ? 'Todavía no guardaste modelos.' : 'Sin resultados para esta selección.'
-      empty.querySelector('p').textContent = noSaved ? 'Tocá el corazón de un modelo para guardarlo.' : 'Quitá un filtro o probá con otra búsqueda.'
+      empty.querySelector('h3').textContent = 'Sin resultados para esta selección.'
+      empty.querySelector('p').textContent = 'Quitá un filtro o probá con otra búsqueda.'
     }
   }
 
   function clearAll() {
     Object.keys(filters).forEach(key => delete filters[key])
     search.value = ''
-    savedOnly = false
     order.value = 'featured'
   }
   function reset() {
@@ -335,10 +301,7 @@ export function initCatalog(container, { navigateBrand }) {
   dialog.onclick = event => { if (event.target === dialog) dialog.close() }
   search.oninput = () => render()
   order.onchange = () => render(true)
-  savedFilter.onclick = () => { savedOnly = !savedOnly; render(true) }
   clear.onclick = find('[data-catalog-reset]').onclick = reset
-  const syncFavorites = () => { if (!container.hidden) render() }
-  window.addEventListener('carsmotion:favorites', syncFavorites)
   prepareButtonMotion(container)
   return {
     show(brand, fresh) {
@@ -347,7 +310,6 @@ export function initCatalog(container, { navigateBrand }) {
       render()
     },
     destroy() {
-      window.removeEventListener('carsmotion:favorites', syncFavorites)
       smallViewport.removeEventListener('change', mountPanel)
       if (dialog.open) dialog.close()
       animation?.kill()

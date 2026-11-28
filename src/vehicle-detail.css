@@ -46,7 +46,7 @@
   overflow-wrap: anywhere;
 }
 .vd-gallery { grid-area: gallery; min-width: 0; }
-.vd-frame { position: relative; background: #f5f5f2; overflow: hidden; border-radius: 12px; }
+.vd-frame { position: relative; background: white; overflow: hidden; border-radius: 12px; }
 .vd-slider { width: 100%; }
 .vd-slider:focus-visible { outline-offset: -3px; }
 .vd-frame .swiper-slide {

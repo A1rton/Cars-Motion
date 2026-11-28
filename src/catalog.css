@@ -69,7 +69,7 @@
 .cm-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(15px, 1.7vw, 29px); row-gap: clamp(29px, 3.2vw, 54px); }
 .catalog-card { position: relative; min-width: 0; }
 .cm-card-link { display: block; }
-.cm-card-frame { overflow: hidden; display: grid; place-items: center; aspect-ratio: 1.94; background: var(--catalog-tint); border-radius: 8px; }
+.cm-card-frame { overflow: hidden; display: grid; place-items: center; aspect-ratio: 1.94; background: transparent; border-radius: 8px; }
 .cm-photo { width: 98%; height: 100%; object-fit: contain; }
 .cm-card-info { position: relative; padding: 17px 47px 17px 0; border-bottom: 1px solid var(--catalog-rule); }
 .cm-maker { font-size: 10px; font-weight: 560; line-height: 1.5; letter-spacing: .13em; text-transform: uppercase; color: #5b605c; }
@@ -188,3 +188,6 @@ html:has(.cm-filter-dialog[open]) { overflow: hidden; }
   .cm-filter-dialog[open] { transition: none; }
 }
 .motion-paused .cm-filter-dialog[open] { transition: none; }
+
+.cm-version { margin: 0 0 4px; font-size: 14px; color: var(--ink); }
+@media (max-width:620px) { .cm-filter-open { grid-column: 1 / -1; } }

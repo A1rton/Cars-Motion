@@ -238,7 +238,7 @@ export function initDetail(container, { back, contact }) {
     const isNew = model.condition === 'new'
     const isUsed = model.condition === 'used'
     const isListing = isNew || isUsed
-    find('.vd-version').textContent = model.version || ''
+    find('.vd-version').textContent = model.version ? (model.condition ? model.version : 'Versión sugerida · ' + model.version) : ''
     find('.vd-version').hidden = !model.version
     find('.vd-condition').textContent = isNew ? 'Nuevo · 0 km' : isUsed ? 'Vehículo usado' : 'Modelo de referencia'
     const price = find('.vd-price')
