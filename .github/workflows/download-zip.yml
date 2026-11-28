@@ -19,6 +19,8 @@ jobs:
           python-version: '3.12'
       - name: Check tracked files, ignore rules, architectures and hashes
         run: python scripts/check-download.py --git
+      - name: Validate inventory filter rules
+        run: node scripts/test-catalog-filters.mjs
       - run: npm ci --no-audit --no-fund
       - name: Rebuild twice and require identical files and hashes
         run: python scripts/build-download.py --check

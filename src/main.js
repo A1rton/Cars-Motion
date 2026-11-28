@@ -6,6 +6,7 @@ import './style.css'
 import { brands } from './catalog-data.js'
 import { mountAutoRoutes } from './auto-routes.js'
 import { prepareButtonMotion } from './button-motion.js'
+import { revealContent } from './content-motion.js'
 import { createHeroCar } from './hero-car.js'
 
 gsap.registerPlugin(ScrollTrigger, Flip)
@@ -61,7 +62,7 @@ function setupMotion() {
       introPlayed = true
     }
     $$('[data-reveal]').forEach(element => {
-      gsap.from(element,{y:34,opacity:0,duration:.85,ease:'power3.out',scrollTrigger:{trigger:element,start:'top 91%',toggleActions:'play none none reverse'}})
+      revealContent(element,{scrollTrigger:{trigger:element,start:'top 91%',toggleActions:'play none none reverse'}})
     })
     // The reference's offset floating elements settle as the section arrives.
     gsap.fromTo('.photo-back',{y:90,rotation:-13},{y:-16,rotation:-6,ease:'none',scrollTrigger:{trigger:'.experience',start:'top 92%',end:'bottom 30%',scrub:1}})

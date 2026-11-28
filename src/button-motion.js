@@ -1,10 +1,10 @@
 import './button-motion.css'
 
 // Decorate only the label. Icons, accessible names and click targets stay in place.
-export function prepareButtonMotion() {
-  const rounded = '.pill-button, .nav-contact, .filter, .footer-up, .dialog-close'
-  const plain = '.navigation > :not(.nav-contact), .text-link, .footer-links > :not(#motion-toggle)'
-  for (const button of document.querySelectorAll(rounded + ', ' + plain)) {
+export function prepareButtonMotion(scope = document) {
+  const rounded = '.pill-button, .nav-contact, .filter, .footer-up, .dialog-close, [data-motion-round], [data-motion-icon]'
+  const plain = '.navigation > :not(.nav-contact), .text-link, .footer-links > :not(#motion-toggle), [data-motion-plain]'
+  for (const button of scope.querySelectorAll(rounded + ', ' + plain)) {
     const rolls = button.matches(rounded)
     button.classList.toggle('roll-button', rolls)
     for (const node of Array.from(button.childNodes)) {
