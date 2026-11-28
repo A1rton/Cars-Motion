@@ -217,6 +217,9 @@ def verify_browser_context(context, url):
     expect(page.locator("html")).not_to_have_class(re.compile("motion-paused"))
 
     page.set_viewport_size({"width": 390, "height": 844})
+    # Let the responsive picture finish switching sources before navigating.
+    page.wait_for_function("""() => { const img = document.querySelector('.cm-hero img');
+        return img.currentSrc.endsWith('porsche-sunset-800.webp') && img.complete && img.naturalWidth > 0 }""")
     page.goto(url)
     verify_brand_navigation(page)
     menu = page.locator(".menu-toggle")
