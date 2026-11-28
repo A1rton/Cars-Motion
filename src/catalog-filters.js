@@ -1,16 +1,12 @@
 // Only published attributes participate. Undefined, false and zero have distinct meanings.
 export const fields = {
   condition: 'Condición', brand: 'Marca', name: 'Modelo', category: 'Carrocería', version: 'Versión',
-  currency: 'Moneda', priceMin: 'Precio mínimo', priceMax: 'Precio máximo', year: 'Año',
-  availability: 'Disponibilidad', location: 'Sucursal o ubicación', financing: 'Financiación',
-  immediate: 'Entrega inmediata', fuel: 'Combustible', transmission: 'Transmisión', engine: 'Motor',
-  drive: 'Tracción', power: 'Potencia (CV)', color: 'Color', doors: 'Puertas', seats: 'Plazas',
-  mileageMin: 'Kilometraje mínimo', mileageMax: 'Kilometraje máximo', maintenance: 'Mantenimiento',
-  serviceRecords: 'Services registrados', singleOwner: 'Único dueño', warranty: 'Garantía', unitState: 'Estado general',
+  priceMin: 'Precio mínimo', priceMax: 'Precio máximo', yearMin: 'Año desde', yearMax: 'Año hasta',
+  mileageMin: 'Kilómetros desde', mileageMax: 'Kilómetros hasta', fuel: 'Combustible',
+  tractionControl: 'Control de tracción', doors: 'Puertas', transmission: 'Transmisión', steering: 'Dirección',
 }
-export const usedFields = ['mileageMin', 'mileageMax', 'maintenance', 'serviceRecords', 'singleOwner', 'warranty', 'unitState']
 export const ranges = {
-  priceMin: 'price', priceMax: 'price', mileageMin: 'mileage', mileageMax: 'mileage',
+  priceMin: 'price', priceMax: 'price', yearMin: 'year', yearMax: 'year', mileageMin: 'mileage', mileageMax: 'mileage',
 }
 export const conditionNames = { new: 'Nuevo (0 km)', used: 'Usado' }
 export const collator = new Intl.Collator('es-AR', { numeric: true, sensitivity: 'base' })
@@ -27,12 +23,11 @@ export function labelFor(key, value, names) {
   return String(value)
 }
 
-export function matchesFilters(item, filters) {
+export function matchesFilters(item, filters, currency) {
   return Object.entries(filters).every(([key, value]) => {
-    if (key === 'currency') return validPrice(item) && item.currency === value
     const numericKey = ranges[key]
     if (numericKey) {
-      if (numericKey === 'price' && (!validPrice(item) || item.currency !== filters.currency)) return false
+      if (numericKey === 'price' && (!validPrice(item) || item.currency !== currency)) return false
       const amount = item[numericKey]
       return Number.isFinite(amount) && (key.endsWith('Min') ? amount >= Number(value) : amount <= Number(value))
     }
