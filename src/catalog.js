@@ -1,5 +1,5 @@
 import { prepareButtonMotion } from './button-motion.js'
-import { fields, usedFields, ranges, conditionNames, known, validPrice, matchesFilters, labelFor, normalize, collator } from './catalog-filters.js'
+import { fields, ranges, conditionNames, known, validPrice, matchesFilters, labelFor, normalize, collator } from './catalog-filters.js'
 import { Flip } from 'gsap/Flip'
 import { brands, imageUrl, vehicles } from './catalog-data.js'
 import { catalogIcon as icon } from './catalog-icons.js'
@@ -166,8 +166,8 @@ export function initCatalog(container, { navigateBrand }) {
       const input = el('input', '')
       input.type = 'number'
       input.min = '0'
-      input.step = ranges[key] === 'mileage' ? '1' : 'any'
-      input.inputMode = ranges[key] === 'mileage' ? 'numeric' : 'decimal'
+      input.step = ranges[key] !== 'price' ? '1' : 'any'
+      input.inputMode = ranges[key] !== 'price' ? 'numeric' : 'decimal'
       input.placeholder = 'Sin límite'
       input.oninput = () => {
         if (!input.validity.valid) { input.reportValidity(); return }
@@ -188,42 +188,35 @@ export function initCatalog(container, { navigateBrand }) {
   const models = group('Marca y modelo', true)
   choices(models, 'brand', [{id:'all',name:'Todas'}, ...brands])
   for (const key of ['name', 'category', 'version']) addSelect(models, key)
-  const commercial = group('Información comercial')
-  addSelect(commercial, 'currency')
-  addRange(commercial, 'priceMin', 'priceMax')
-  for (const key of ['year','availability','location','financing','immediate']) addSelect(commercial, key)
-  addRange(commercial, 'mileageMin', 'mileageMax')
+  const amounts = group('Precio, año y kilómetros')
+  const currencies = [...new Set(vehicles.filter(validPrice).map(v => v.currency))]
+  let priceCurrency = currencies.includes('ARS') ? 'ARS' : currencies[0] || 'ARS'
+  if (currencies.length > 1) {
+    const label = el('label', 'cm-field', 'Moneda del precio')
+    const unit = el('select', '')
+    for (const code of currencies) unit.add(new Option(code, code))
+    unit.value = priceCurrency
+    unit.onchange = () => { priceCurrency = unit.value; render() }
+    label.append(unit)
+    amounts.append(label)
+  }
+  addRange(amounts, 'priceMin', 'priceMax')
+  addRange(amounts, 'yearMin', 'yearMax')
+  addRange(amounts, 'mileageMin', 'mileageMax')
   const specs = group('Características técnicas')
-  for (const key of ['color','fuel','transmission','engine','drive','power','doors','seats']) addSelect(specs, key)
-  const used = group('Detalles de la unidad usada')
-  for (const key of usedFields.slice(2)) addSelect(used, key)
+  for (const key of ['fuel','tractionControl','doors','transmission','steering']) addSelect(specs, key)
 
   function updateControls() {
-    const usedSelected = filters.condition === 'used'
-    used.parentElement.hidden = !usedSelected
-    const yearField = controls.get('year').parentElement
-    const mileageRange = controls.get('mileageMin').closest('.cm-range')
-    const yearHost = usedSelected ? used : commercial
-    if (yearField.parentElement !== yearHost) yearHost.prepend(yearField, mileageRange)
     const withinBrand = filters.brand ? vehicles.filter(v => v.brand === filters.brand) : vehicles
-    const usedUnits = vehicles.filter(v => v.condition === 'used')
     for (const [key, control] of controls) {
       if (ranges[key]) {
-        const price = ranges[key] === 'price'
-        const available = price
-          ? vehicles.some(v => validPrice(v) && v.currency === filters.currency)
-          : (usedSelected ? usedUnits : vehicles).some(v => Number.isFinite(v.mileage))
-        control.disabled = !available
-        control.placeholder = available ? 'Sin límite' : price && vehicles.some(validPrice) ? 'Elegí moneda' : 'Sin datos'
+        control.placeholder = ranges[key] === 'price' ? priceCurrency : 'Sin límite'
         if (control.value !== (filters[key] || '')) control.value = filters[key] || ''
         continue
       }
       let source = vehicles
       if (key === 'name') source = withinBrand
       if (key === 'version') source = withinBrand.filter(v => !filters.name || v.name === filters.name)
-      if (usedFields.includes(key)) source = usedUnits
-      if (key === 'currency') source = vehicles.filter(validPrice)
-      if (key === 'year' && usedSelected) source = usedUnits
       const values = [...new Set(source.map(v => v[key]).filter(known).map(String))].sort(collator.compare)
       const signature = JSON.stringify(values)
       if (control.dataset.options !== signature) {
@@ -254,16 +247,12 @@ export function initCatalog(container, { navigateBrand }) {
     else if (value) filters[key] = value
     else delete filters[key]
     if (key === 'name') delete filters.version
-    if (key === 'currency') { delete filters.priceMin; delete filters.priceMax }
-    if (key === 'condition' && value !== 'used') usedFields.slice(2).forEach(field => delete filters[field])
-    if (key === 'condition' && value === 'used' && filters.year &&
-      !vehicles.some(v => v.condition === 'used' && String(v.year) === filters.year)) delete filters.year
     render(!ranges[key])
   }
 
   function chips() {
     active.querySelectorAll('.cm-chip').forEach(chip => chip.remove())
-    const entries = Object.entries(filters).map(([key, value]) => [key, fields[key] + ' · ' + labelFor(key, value, brandName)])
+    const entries = Object.entries(filters).map(([key, value]) => [key, fields[key] + ' · ' + labelFor(key, value, brandName) + (ranges[key] === 'price' ? ' ' + priceCurrency : '')])
     if (search.value.trim()) entries.push(['search', search.value.trim()])
     if (savedOnly) entries.push(['saved', 'Favoritos'])
     for (const [key, label] of entries) {
@@ -289,7 +278,7 @@ export function initCatalog(container, { navigateBrand }) {
     updateControls()
     chips()
     const tokens = normalize(search.value).split(/\s+/).filter(Boolean)
-    const selected = vehicles.filter(v => matchesFilters(v, filters) && (!savedOnly || isFavorite(v.id)) &&
+    const selected = vehicles.filter(v => matchesFilters(v, filters, priceCurrency) && (!savedOnly || isFavorite(v.id)) &&
       tokens.every(token => normalize(fullName(v) + ' ' + v.category + ' ' + (v.version || '')).includes(token)))
     if (order.value !== 'featured') {
       const direction = order.value === 'asc' ? 1 : -1
