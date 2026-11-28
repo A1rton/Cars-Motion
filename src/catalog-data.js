@@ -15,6 +15,11 @@ export const brands = [
   ['volkswagen', 'Volkswagen', 'volkswagen.svg'],
 ].map(([id, name, logo]) => ({ id, name, logo: logo && imageUrl('brands/' + logo) }))
 
+// These entries describe photographed models. A sale listing can additionally
+// provide condition ('new' or 'used'), version, unit data and price + currency.
+// For a used listing, images must belong to that particular unit. Optional
+// configuratorUrl and actions.{consult,reserve,finance,visit} identify real,
+// public destinations for this listing; omit any unpublished service.
 export const vehicles = [
   [
     "porsche-911",
@@ -87,9 +92,7 @@ export const vehicles = [
     "Blanco"
   ]
 ].map(([id, brand, name, category, color]) => ({
-  id, brand, name, category,
-  description: '',
-  facts: [{ label: 'Carrocería', value: category }, { label: 'Color de la imagen', value: color }],
+  id, brand, name, category, color,
   images: [{ src: imageUrl('catalog/studio/' + id + '-1600.webp'), small: imageUrl('catalog/studio/' + id + '-800.webp'),
     width: 1600, height: 800, alt: brands.find(item => item.id === brand).name + ' ' + name + ', vista de tres cuartos.' }],
 }))

@@ -7,7 +7,7 @@
   isolation: isolate;
   overflow: hidden;
 }
-.roll-button:not(.dialog-close), .image-dialog .dialog-close { position: relative; }
+:where(.roll-button:not(.dialog-close)), .image-dialog .dialog-close { position: relative; }
 .roll-button::before {
   content: "";
   position: absolute;
@@ -43,6 +43,10 @@
   --roll-ink: #fff;
 }
 .image-dialog .roll-button.dialog-close { --roll-paper: white; --roll-ink: #151718; }
+.roll-button:is([data-motion-round], [data-motion-icon]):not(.button-dark) {
+  --roll-paper: var(--ink);
+  --roll-ink: white;
+}
 .navigation > .nav-contact.roll-button, .roll-button:is(.button-dark, .filter.active) {
   border: 1px solid var(--ink);
 }

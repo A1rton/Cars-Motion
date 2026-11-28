@@ -1,4 +1,5 @@
-import gsap from 'gsap'
+import { prepareButtonMotion } from './button-motion.js'
+import { fields, usedFields, ranges, conditionNames, known, validPrice, matchesFilters, labelFor, normalize, collator } from './catalog-filters.js'
 import { Flip } from 'gsap/Flip'
 import { brands, imageUrl, vehicles } from './catalog-data.js'
 import { catalogIcon as icon } from './catalog-icons.js'
@@ -6,8 +7,6 @@ import { isFavorite, toggleFavorite } from './favorites.js'
 import './catalog.css'
 
 const brandName = new Map(brands.map(brand => [brand.id, brand.name]))
-const normalize = text => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim()
-const collator = new Intl.Collator('es-AR', { numeric: true, sensitivity: 'base' })
 const fullName = vehicle => `${brandName.get(vehicle.brand)} ${vehicle.name}`
 
 function el(tag, className, text) {
@@ -28,7 +27,7 @@ function buildCard(vehicle) {
   const img = el('img', 'cm-photo')
   img.src = photo.small
   img.srcset = `${photo.small} 800w, ${photo.src} 1600w`
-  img.sizes = '(min-width: 1050px) 30vw, (min-width: 650px) 45vw, 95vw'
+  img.sizes = '(min-width: 1450px) 22vw, (min-width: 901px) 32vw, (min-width: 620px) 45vw, 95vw'
   img.alt = photo.alt
   img.loading = 'lazy'
   img.decoding = 'async'
@@ -36,13 +35,23 @@ function buildCard(vehicle) {
   frame.append(img)
   const info = el('div', 'cm-card-info')
   info.append(el('p', 'cm-maker', brandName.get(vehicle.brand)), el('h3','cm-model',vehicle.name))
-  const year = vehicle.year
-  info.append(el('p', 'cm-category', year ? `${vehicle.category} · ${year}` : vehicle.category))
+  const summary = [vehicle.category, vehicle.color]
+  if (vehicle.condition === 'used') {
+    summary.push(vehicle.year, Number.isFinite(vehicle.mileage) ? vehicle.mileage.toLocaleString('es-AR') + ' km' : null, vehicle.transmission, vehicle.fuel)
+  } else if (vehicle.condition === 'new') {
+    summary.push(vehicle.engine, Number.isFinite(vehicle.power) ? vehicle.power + ' CV' : null)
+  }
+  if (vehicle.version) info.querySelector('h3').append(' · ' + vehicle.version)
+  info.append(el('p', 'cm-category', summary.filter(known).join(' · ')))
+  const terms = [conditionNames[vehicle.condition], vehicle.availability]
+  if (validPrice(vehicle)) terms.push(vehicle.currency + ' ' + vehicle.price.toLocaleString('es-AR'))
+  if (terms.some(known)) info.append(el('p', 'cm-commercial', terms.filter(known).join(' · ')))
   const arrow = el('span', 'cm-card-arrow')
   arrow.innerHTML = icon('arrow-up-right')
   info.append(arrow)
   link.append(frame, info)
-  const save = el('button','cm-save')
+  const save = el('button','cm-save button-light')
+  save.dataset.motionIcon = ''
   save.type = 'button'
   save.innerHTML = icon('heart')
   save.setAttribute('aria-label', 'Guardar ' + fullName(vehicle) + ' en favoritos')
@@ -52,125 +61,306 @@ function buildCard(vehicle) {
   return card
 }
 
-export function initCatalog(container, {navigateBrand}) {
-  const state = { brand: 'all', onlySaved: false }
+
+export function initCatalog(container, { navigateBrand }) {
+  const filters = {}
+  let savedOnly = false
+  let animation
+  const smallViewport = matchMedia('(max-width: 900px)')
   container.innerHTML = `
     <header class="cm-hero">
       <picture><source media="(max-width:600px)" srcset="${imageUrl('porsche-sunset-800.webp')}"><img alt="" src="${imageUrl('porsche-sunset-1600.webp')}"></picture>
       <div class="cm-hero-content"><nav aria-label="Ruta de navegación"><a href="#inicio">Inicio</a><span aria-hidden="true">/</span>Autos</nav>
-        <h1 class="cm-title" tabindex="-1">Autos</h1></div>
-      <span class="cm-hero-caption">Porsche 911</span>
+        <div><h1 class="cm-title" tabindex="-1">Catálogo de autos</h1><p class="cm-hero-description">Explorá la colección por marca, carrocería y condición.</p></div>
+      </div><span class="cm-hero-caption">Porsche 911</span>
     </header>
-    <div class="cm-content">
-      <div class="cm-brands" role="group" aria-label="Filtrar por marca"></div>
-      <div class="cm-toolbar" role="search" aria-label="Buscar y filtrar autos">
-        <label class="cm-search">${icon('search')}<span class="sr-only">Buscar marca o modelo</span><input type="search" placeholder="Buscar marca o modelo" autocomplete="off"></label>
-        <label class="cm-select-label"><span>Carrocería</span><span class="cm-select-wrap"><select id="catalog-body"><option value="all">Todas</option></select>${icon('chevron-down')}</span></label>
-        <label class="cm-select-label"><span>Ordenar por</span><span class="cm-select-wrap"><select id="catalog-order"><option value="featured">Destacados</option><option value="asc">Marca A–Z</option><option value="desc">Marca Z–A</option></select>${icon('chevron-down')}</span></label>
-        <button type="button" class="cm-saved-filter" aria-pressed="false">${icon('heart')} Favoritos <span></span></button>
-      </div>
-      <div class="cm-result-head"><h2>Modelos</h2><div class="cm-result-tools"><button type="button" class="cm-clear" hidden>Limpiar filtros</button><span class="cm-count" role="status"></span></div></div>
-      <div class="cm-grid"></div>
-      <div class="catalog-empty" hidden><h3></h3><p></p><button type="button" data-catalog-reset>Ver todos los modelos ${icon('arrow-right')}</button></div>
-    </div>`
-  const find = s => container.querySelector(s)
+    <div class="cm-content"><div class="cm-layout">
+      <section class="cm-results" aria-labelledby="cm-models">
+        <header class="cm-result-head"><div><h2 id="cm-models">Modelos</h2><span class="cm-count" role="status"></span></div>
+          <label class="cm-order"><span>Ordenar por</span><select id="catalog-order"><option value="featured">Destacados</option><option value="asc">Marca A–Z</option><option value="desc">Marca Z–A</option></select></label>
+        </header>
+        <div class="cm-search-row">
+          <label class="cm-search">${icon('search')}<span class="sr-only">Buscar marca o modelo</span><input type="search" placeholder="Buscar marca o modelo" autocomplete="off"></label>
+          <button type="button" class="cm-saved-filter pill-button button-light" aria-pressed="false">${icon('heart')} Favoritos <span data-saved-count>0</span></button>
+          <button type="button" class="cm-open-filters cm-filter-open pill-button button-dark" aria-haspopup="dialog" aria-controls="cm-dialog">${icon('sliders-horizontal')} Filtrar <span data-filter-count>0</span></button>
+        </div>
+        <div class="cm-active cm-chips" role="group" aria-label="Filtros activos" hidden><button type="button" class="cm-clear text-link">Limpiar filtros</button></div>
+        <div class="cm-grid"></div>
+        <div class="catalog-empty" hidden><h3></h3><p></p><button class="pill-button button-dark" type="button" data-catalog-reset>Ver todos los modelos ${icon('arrow-right')}</button></div>
+      </section>
+      <aside class="cm-sidebar" aria-label="Filtrar catálogo"><div class="cm-filter-panel">
+        <div class="cm-panel-head"><h2 id="cm-filter-title">Filtros</h2>
+          <button type="button" data-motion-icon class="cm-close-filters button-light" aria-label="Cerrar filtros">${icon('x')}</button></div>
+        <div class="cm-filter-groups"></div>
+        <button type="button" class="cm-filter-done pill-button button-dark">Ver resultados <span data-mobile-results></span> ${icon('arrow-right')}</button>
+      </div></aside>
+    </div></div>
+    <dialog id="cm-dialog" class="cm-filter-dialog" aria-labelledby="cm-filter-title"></dialog>`
+
+  const find = selector => container.querySelector(selector)
+  const cards = new Map(vehicles.map(vehicle => {
+    const card = buildCard(vehicle)
+    prepareButtonMotion(card)
+    return [vehicle.id, card]
+  }))
   const grid = find('.cm-grid')
-  const empty = find('.catalog-empty')
-  const search = find('input')
-  const body = find('#catalog-body')
+  const search = find('input[type=search]')
   const order = find('#catalog-order')
-  const onlySaved = find('.cm-saved-filter')
-  const bar = find('.cm-brands')
-  const cards = new Map(vehicles.map(v => [v.id,buildCard(v)]))
-  const categories = [...new Set(vehicles.map(v => v.category))].sort(collator.compare)
-  for (const category of categories) body.add(new Option(category,category))
-  for (const brand of [{id:'all',name:'Todas',logo:null}, ...brands]) {
-    const btn = el('button','cm-brand')
-    btn.type = 'button'
-    btn.dataset.brand = brand.id
-    btn.title = brand.name
-    btn.setAttribute('aria-label', brand.id === 'all' ? 'Todas las marcas' : brand.name)
-    if (brand.logo) {
-      const img = el('img', '')
-      img.alt = ''
-      img.src = brand.logo
-      btn.append(img)
-    } else btn.textContent = brand.name
-    btn.onclick = () => {
-      if (state.brand === brand.id) return
-      state.brand = brand.id
-      render(true)
-      navigateBrand(brand.id)
-    }
-    bar.append(btn)
+  const active = find('.cm-active')
+  const clear = find('.cm-clear')
+  const savedFilter = find('.cm-saved-filter')
+  const dialog = find('.cm-filter-dialog')
+  const panel = find('.cm-filter-panel')
+  const controls = new Map()
+
+  function group(title, expanded = false) {
+    const group = el('details', 'cm-filter-group cm-group')
+    group.open = expanded
+    const summary = el('summary', '', title)
+    summary.insertAdjacentHTML('beforeend', icon('chevron-down'))
+    const content = el('div', 'cm-fields')
+    group.append(summary, content)
+    find('.cm-filter-groups').append(group)
+    return content
   }
 
-  let animation
-  function render(animate = false) {
-    const tokens = normalize(search.value).split(/\s+/).filter(Boolean)
-    const selected = vehicles.filter(v => {
-      const haystack = normalize(fullName(v) + ' ' + v.category)
-      return (state.brand === 'all' || state.brand === v.brand) &&
-        (body.value === 'all' || body.value === v.category) &&
-        (!state.onlySaved || isFavorite(v.id)) && tokens.every(token => haystack.includes(token))
-    })
-    if (order.value !== 'featured') selected.sort((a,b) => collator.compare(fullName(a),fullName(b)) * (order.value === 'asc' ? 1 : -1))
-    for (const btn of bar.children) btn.setAttribute('aria-pressed', String(btn.dataset.brand === state.brand))
-    onlySaved.setAttribute('aria-pressed', String(state.onlySaved))
-    onlySaved.querySelector('span').textContent = vehicles.filter(v => isFavorite(v.id)).length
-    const active = document.activeElement
-    animation?.progress(1).kill()
-    const canMove = animate && !matchMedia('(prefers-reduced-motion: reduce)').matches && !document.documentElement.classList.contains('motion-paused') && !container.hidden
-    const survivors = selected.map(v => cards.get(v.id)).filter(node => grid.contains(node))
-    const before = canMove && survivors.length ? Flip.getState(survivors) : null
-    for (const v of selected) cards.get(v.id).querySelector('.cm-save').setAttribute('aria-pressed', String(isFavorite(v.id)))
-    grid.replaceChildren(...selected.map(v => cards.get(v.id)))
-    if (before) animation = Flip.from(before, {targets:survivors,duration:.32,ease:'power2.out'})
-    if (active?.matches('.cm-save')) {
-      if (grid.contains(active)) active.focus({preventScroll:true})
-      else onlySaved.focus({preventScroll:true})
+  function choices(parent, key, options) {
+    const buttons = el('div', key === 'brand' ? 'cm-brands' : 'cm-conditions')
+    buttons.setAttribute('role', 'group')
+    buttons.setAttribute('aria-label', fields[key])
+    for (const {id, name, logo} of options) {
+      const button = el('button', key === 'brand' ? 'cm-brand' : 'cm-choice')
+      button.type = 'button'
+      button.dataset[key] = id
+      button.setAttribute('aria-label', name)
+      if (logo) {
+        const img = el('img', '')
+        img.alt = ''
+        img.src = logo
+        button.title = name
+        button.append(img)
+      } else {
+        button.textContent = name
+        button.dataset.motionPlain = ''
+      }
+      button.onclick = () => change(key, id === 'all' ? '' : id)
+      buttons.append(button)
     }
+    parent.append(buttons)
+  }
+
+  function addSelect(parent, key) {
+    const field = el('label', 'cm-field')
+    const select = el('select', '')
+    select.id = key === 'category' ? 'catalog-body' : 'catalog-' + key
+    select.onchange = () => change(key, select.value)
+    field.append(el('span', '', fields[key]), select)
+    parent.append(field)
+    controls.set(key, select)
+  }
+
+  function addRange(parent, minKey, maxKey) {
+    const pair = el('div', 'cm-range')
+    for (const key of [minKey, maxKey]) {
+      const field = el('label', 'cm-field')
+      const input = el('input', '')
+      input.type = 'number'
+      input.min = '0'
+      input.step = ranges[key] === 'mileage' ? '1' : 'any'
+      input.inputMode = ranges[key] === 'mileage' ? 'numeric' : 'decimal'
+      input.placeholder = 'Sin límite'
+      input.oninput = () => {
+        if (!input.validity.valid) { input.reportValidity(); return }
+        change(key, input.value)
+      }
+      field.append(el('span', '', fields[key]), input)
+      pair.append(field)
+      controls.set(key, input)
+    }
+    parent.append(pair)
+  }
+
+  const condition = group('Condición', true)
+  choices(condition, 'condition', [{id:'all',name:'Todos'}, {id:'new',name:'0 km'}, {id:'used',name:'Usados'}])
+  if (!vehicles.some(vehicle => conditionNames[vehicle.condition])) {
+    condition.append(el('p', 'cm-filter-note', 'Los modelos de referencia todavía no tienen condición publicada.'))
+  }
+  const models = group('Marca y modelo', true)
+  choices(models, 'brand', [{id:'all',name:'Todas'}, ...brands])
+  for (const key of ['name', 'category', 'version']) addSelect(models, key)
+  const commercial = group('Información comercial')
+  addSelect(commercial, 'currency')
+  addRange(commercial, 'priceMin', 'priceMax')
+  for (const key of ['year','availability','location','financing','immediate']) addSelect(commercial, key)
+  addRange(commercial, 'mileageMin', 'mileageMax')
+  const specs = group('Características técnicas')
+  for (const key of ['color','fuel','transmission','engine','drive','power','doors','seats']) addSelect(specs, key)
+  const used = group('Detalles de la unidad usada')
+  for (const key of usedFields.slice(2)) addSelect(used, key)
+
+  function updateControls() {
+    const usedSelected = filters.condition === 'used'
+    used.parentElement.hidden = !usedSelected
+    const yearField = controls.get('year').parentElement
+    const mileageRange = controls.get('mileageMin').closest('.cm-range')
+    const yearHost = usedSelected ? used : commercial
+    if (yearField.parentElement !== yearHost) yearHost.prepend(yearField, mileageRange)
+    const withinBrand = filters.brand ? vehicles.filter(v => v.brand === filters.brand) : vehicles
+    const usedUnits = vehicles.filter(v => v.condition === 'used')
+    for (const [key, control] of controls) {
+      if (ranges[key]) {
+        const price = ranges[key] === 'price'
+        const available = price
+          ? vehicles.some(v => validPrice(v) && v.currency === filters.currency)
+          : (usedSelected ? usedUnits : vehicles).some(v => Number.isFinite(v.mileage))
+        control.disabled = !available
+        control.placeholder = available ? 'Sin límite' : price && vehicles.some(validPrice) ? 'Elegí moneda' : 'Sin datos'
+        if (control.value !== (filters[key] || '')) control.value = filters[key] || ''
+        continue
+      }
+      let source = vehicles
+      if (key === 'name') source = withinBrand
+      if (key === 'version') source = withinBrand.filter(v => !filters.name || v.name === filters.name)
+      if (usedFields.includes(key)) source = usedUnits
+      if (key === 'currency') source = vehicles.filter(validPrice)
+      if (key === 'year' && usedSelected) source = usedUnits
+      const values = [...new Set(source.map(v => v[key]).filter(known).map(String))].sort(collator.compare)
+      const signature = JSON.stringify(values)
+      if (control.dataset.options !== signature) {
+        control.replaceChildren(new Option(values.length ? 'Todos' : 'Sin datos publicados',''))
+        for (const value of values) control.add(new Option(labelFor(key, value, brandName), value))
+        control.dataset.options = signature
+      }
+      control.disabled = !values.length
+      control.value = filters[key] || ''
+    }
+    for (const button of panel.querySelectorAll('[data-brand], [data-condition]')) {
+      const key = button.hasAttribute('data-brand') ? 'brand' : 'condition'
+      button.setAttribute('aria-pressed', String(button.dataset[key] === (filters[key] || 'all')))
+    }
+  }
+
+  function setBrand(value) {
+    if ((filters.brand || '') !== value) {
+      delete filters.name
+      delete filters.version
+    }
+    if (value) filters.brand = value
+    else delete filters.brand
+  }
+
+  function change(key, value) {
+    if (key === 'brand') { setBrand(value); navigateBrand(value || 'all') }
+    else if (value) filters[key] = value
+    else delete filters[key]
+    if (key === 'name') delete filters.version
+    if (key === 'currency') { delete filters.priceMin; delete filters.priceMax }
+    if (key === 'condition' && value !== 'used') usedFields.slice(2).forEach(field => delete filters[field])
+    if (key === 'condition' && value === 'used' && filters.year &&
+      !vehicles.some(v => v.condition === 'used' && String(v.year) === filters.year)) delete filters.year
+    render(!ranges[key])
+  }
+
+  function chips() {
+    active.querySelectorAll('.cm-chip').forEach(chip => chip.remove())
+    const entries = Object.entries(filters).map(([key, value]) => [key, fields[key] + ' · ' + labelFor(key, value, brandName)])
+    if (search.value.trim()) entries.push(['search', search.value.trim()])
+    if (savedOnly) entries.push(['saved', 'Favoritos'])
+    for (const [key, label] of entries) {
+      const chip = el('button', 'cm-chip', label)
+      chip.type = 'button'
+      chip.setAttribute('aria-label', 'Quitar filtro ' + label)
+      chip.insertAdjacentHTML('beforeend', icon('x'))
+      chip.onclick = () => {
+        if (key === 'search') search.value = ''
+        else if (key === 'saved') savedOnly = false
+        else change(key, '')
+        if (key === 'search' || key === 'saved') render(true)
+        const nextFocus = active.querySelector('.cm-chip') || search
+        nextFocus.focus({preventScroll:true})
+      }
+      active.insertBefore(chip, clear)
+    }
+    active.hidden = !entries.length
+    find('[data-filter-count]').textContent = entries.length
+  }
+
+  function render(animate = false) {
+    updateControls()
+    chips()
+    const tokens = normalize(search.value).split(/\s+/).filter(Boolean)
+    const selected = vehicles.filter(v => matchesFilters(v, filters) && (!savedOnly || isFavorite(v.id)) &&
+      tokens.every(token => normalize(fullName(v) + ' ' + v.category + ' ' + (v.version || '')).includes(token)))
+    if (order.value !== 'featured') {
+      const direction = order.value === 'asc' ? 1 : -1
+      selected.sort((a,b) => direction * collator.compare(fullName(a), fullName(b)))
+    }
+    animation?.progress(1).kill()
+    const canMove = animate && !container.hidden && !matchMedia('(prefers-reduced-motion: reduce)').matches &&
+      !document.documentElement.classList.contains('motion-paused')
+    const survivors = selected.map(v => cards.get(v.id)).filter(card => grid.contains(card))
+    const before = canMove && survivors.length ? Flip.getState(survivors) : null
+    const focus = document.activeElement
+    for (const v of selected) {
+      const save = cards.get(v.id).querySelector('.cm-save')
+      save.setAttribute('aria-pressed', String(isFavorite(v.id)))
+    }
+    grid.replaceChildren(...selected.map(v => cards.get(v.id)))
+    if (before) animation = Flip.from(before, { targets:survivors, duration:.5, ease:'power2.inOut' })
+    if (focus?.matches('.cm-save')) (grid.contains(focus) ? focus : savedFilter).focus({ preventScroll:true })
+    savedFilter.setAttribute('aria-pressed', String(savedOnly))
+    find('[data-saved-count]').textContent = vehicles.filter(v => isFavorite(v.id)).length
     find('.cm-count').textContent = selected.length === 1 ? '1 modelo' : selected.length + ' modelos'
-    find('.cm-clear').hidden = !selected.length || !(tokens.length || body.value !== 'all' || state.onlySaved || state.brand !== 'all')
+    find('[data-mobile-results]').textContent = '(' + selected.length + ')'
+    const empty = find('.catalog-empty')
     empty.hidden = selected.length > 0
     if (!selected.length) {
-      const noFavorites = state.onlySaved && !vehicles.some(v => isFavorite(v.id))
-      empty.querySelector('h3').textContent = noFavorites ? 'Todavía no guardaste modelos.' : 'Sin modelos para esta selección.'
-      empty.querySelector('p').textContent = noFavorites ? 'Usá el corazón de cada modelo para guardarlo acá.' : 'Probá con otra marca o ajustá los filtros.'
+      const noSaved = savedOnly && !vehicles.some(v => isFavorite(v.id))
+      empty.querySelector('h3').textContent = noSaved ? 'Todavía no guardaste modelos.' : 'Sin resultados para esta selección.'
+      empty.querySelector('p').textContent = noSaved ? 'Tocá el corazón de un modelo para guardarlo.' : 'Quitá un filtro o probá con otra búsqueda.'
     }
   }
-  onlySaved.onclick = () => {state.onlySaved = !state.onlySaved; render(true)}
-  search.oninput = () => render()
-  body.onchange = order.onchange = () => render(true)
-  function clearFilters() {
+
+  function clearAll() {
+    Object.keys(filters).forEach(key => delete filters[key])
     search.value = ''
-    body.value = 'all'
+    savedOnly = false
     order.value = 'featured'
-    state.onlySaved = false
-    state.brand = 'all'
   }
   function reset() {
-    clearFilters()
-    render(true)
+    clearAll()
     navigateBrand('all')
-    bar.scrollLeft = 0
+    render(true)
     search.focus({preventScroll:true})
   }
-  find('.cm-clear').onclick = find('[data-catalog-reset]').onclick = reset
+
+  function mountPanel() {
+    if (!smallViewport.matches && dialog.open) dialog.close()
+    const host = smallViewport.matches ? dialog : find('.cm-sidebar')
+    if (panel.parentElement !== host) host.append(panel)
+  }
+  mountPanel()
+  smallViewport.addEventListener('change', mountPanel)
+  find('.cm-open-filters').onclick = () => dialog.showModal()
+  find('.cm-close-filters').onclick = find('.cm-filter-done').onclick = () => dialog.close()
+  dialog.onclick = event => { if (event.target === dialog) dialog.close() }
+  search.oninput = () => render()
+  order.onchange = () => render(true)
+  savedFilter.onclick = () => { savedOnly = !savedOnly; render(true) }
+  clear.onclick = find('[data-catalog-reset]').onclick = reset
   const syncFavorites = () => { if (!container.hidden) render() }
   window.addEventListener('carsmotion:favorites', syncFavorites)
+  prepareButtonMotion(container)
   return {
     show(brand, fresh) {
-      if (fresh) clearFilters()
-      state.brand = brandName.has(brand) ? brand : 'all'
+      if (fresh) clearAll()
+      setBrand(brandName.has(brand) ? brand : '')
       render()
-      const active = bar.querySelector('[aria-pressed="true"]')
-      if (active && bar.scrollWidth > bar.clientWidth) {
-        bar.scrollLeft += active.getBoundingClientRect().left - bar.getBoundingClientRect().left - (bar.clientWidth - active.clientWidth) / 2
-      }
     },
     destroy() {
       window.removeEventListener('carsmotion:favorites', syncFavorites)
+      smallViewport.removeEventListener('change', mountPanel)
+      if (dialog.open) dialog.close()
       animation?.kill()
       container.replaceChildren()
     }

@@ -1,4 +1,4 @@
-import gsap from 'gsap'
+import { revealContent } from './content-motion.js'
 import { initCatalog } from './catalog.js'
 import { initDetail } from './vehicle-detail.js'
 import { brands, vehicles } from './catalog-data.js'
@@ -32,10 +32,9 @@ export function mountAutoRoutes({ signal, closeOverlays, contact, reduced, refre
     if (initial && view === home) return
     closeOverlays()
     if (current === detail && view !== detail) fiche?.hide?.()
-    transition?.kill()
+    transition?.revert()
     for (const element of views) {
       element.hidden = element !== view
-      gsap.set(element, { clearProps: 'opacity' })
     }
     let title = homeTitle
     if (view === listing) {
@@ -60,8 +59,9 @@ export function mountAutoRoutes({ signal, closeOverlays, contact, reduced, refre
     })
     skip.href = view === home ? '#seleccion' : '#' + view.id
     skip.textContent = view === home ? 'Saltar a la selección' : 'Saltar al contenido'
-    if (view !== current && !initial && !reduced()) {
-      transition = gsap.fromTo(view, { opacity: .45 }, { opacity: 1, duration: .24, ease: 'power2.out', clearProps: 'opacity' })
+    if (view !== home && view !== current && !restore && !reduced()) {
+      const heading = view.querySelector('h1')
+      if (heading) transition = revealContent(heading, { clearProps: 'opacity,transform' })
     }
     current = view
     if (!initial) {
